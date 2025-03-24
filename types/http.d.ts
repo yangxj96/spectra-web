@@ -3,7 +3,7 @@
 /**
  * 响应整体
  */
-type IResult<T = any> = {
+type IResult<T> = {
     code: number;
     msg: string;
     data: T;

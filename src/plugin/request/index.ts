@@ -4,7 +4,7 @@ import { ElMessage } from "element-plus/es";
 import useUserStore from "@/plugin/store/modules/useUserStore";
 
 const http = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: import.meta.env.BASE_URL,
     timeout: 60 * 1000,
     withCredentials: false,
     headers: {
@@ -50,7 +50,7 @@ http.interceptors.request.use(
 // 响应拦截器
 http.interceptors.response.use(
     // 在2xx范围内的任何状态代码都会触发此函数，这里主要用于处理响应数据
-    (response: AxiosResponse<IResult>) => {
+    (response: AxiosResponse<IResult<any>>) => {
         hideLoading();
         if (response.data.code != 0) {
             ElMessage.error({

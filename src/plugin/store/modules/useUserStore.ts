@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
 export interface UserState {
-    token: Token;
+    token: LoginInfo;
 }
 
 const useUserStore = defineStore("user", {

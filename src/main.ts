@@ -7,6 +7,12 @@ import loadDirective from "@/directive";
 import "//at.alicdn.com/t/c/font_3119163_hp36jfkhicb.js";
 import Icons from "@/components/common/Icons.vue";
 
+// mock
+if (import.meta.env.DEV) {
+    const { server } = await import("@/mocks/browser.ts");
+    await server.start();
+}
+
 // 创建APP
 const app = createApp(App);
 loadPlugins(app);
