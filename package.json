@@ -8,31 +8,13 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "yarn format && yarn lint && yarn type-check && vite",
+        "start": "pnpm format && pnpm lint && pnpm type-check && vite",
         "build": "vite build",
         "image": "cross-conf-env docker build -t $npm_package_name:$npm_package_version -f Dockerfile .",
         "preview": "vite preview --host",
         "format": "prettier --write . --config ./.prettierrc.json",
         "lint": "eslint  ./src --fix --flag unstable_ts_config",
         "type-check": "vue-tsc --noEmit --composite false"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "yarn format && yarn lint && yarn type-check"
-        }
-    },
-    "homepage": "https://github.com/yangxj96/spectra-web",
-    "keywords": [
-        "SAAS",
-        "VUE"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/yangxj96/spectra-web"
-    },
-    "bugs": {
-        "email": "yangxj96@gmail.com",
-        "url": "https://github.com/yangxj96/spectra-web/issues"
     },
     "dependencies": {
         "@stomp/stompjs": "7.1.0",
@@ -84,6 +66,6 @@
     ],
     "volta": {
         "node": "20.16.0",
-        "yarn": "4.4.0"
+        "pnpm": "10.6.5"
     }
 }
