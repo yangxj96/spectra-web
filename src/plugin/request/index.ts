@@ -32,7 +32,7 @@ http.interceptors.request.use(
             showLoading();
             config.headers.loading = undefined;
         }
-        const token = useUserStore().token.accessToken;
+        const token = useUserStore().token.access_token;
         if (token != undefined || token != undefined || token != "") {
             config.headers["Authorization"] = token;
         }

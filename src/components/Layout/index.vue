@@ -75,7 +75,6 @@
         if (r.length <= 0) {
             r = [...router.currentRoute.value.matched];
         }
-        console.log(r);
         breadcrumb.value = r;
     }
 </script>

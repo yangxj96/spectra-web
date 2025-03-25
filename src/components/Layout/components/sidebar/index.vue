@@ -10,18 +10,35 @@
             <icons name="icon-home" class-name="icon-sidebar" />
             <template #title>首页</template>
         </el-menu-item>
+
+        <el-menu-item-group v-for="(item, index) in menus" :key="index" :title="item.name">
+            <el-menu-item v-for="(sub, subIdx) in item.children" :key="subIdx">
+                <icons name="icon-home" class-name="icon-sidebar" />
+                <template #title>{{ sub.name }}</template>
+            </el-menu-item>
+        </el-menu-item-group>
     </el-menu>
 </template>
 
 <script lang="ts" setup>
     import { stopAllRequest } from "@/plugin/request";
     import { useRoute } from "vue-router";
+    import { onMounted, ref } from "vue";
+    import SystemApi from "@/api/SystemApi.ts";
 
     const route = useRoute();
+    const menus = ref<Menu[]>();
 
     function onMenuItemClick() {
         stopAllRequest();
     }
+
+    onMounted(() => {
+        // 获取菜单
+        SystemApi.getUserMenu().then(res => {
+            menus.value = res.data;
+        });
+    });
 </script>
 
 <style scoped lang="scss">
