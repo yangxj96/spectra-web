@@ -29,62 +29,41 @@
     </el-row>
     <!-- 数据区 -->
     <el-row class="box-body">
-        <!-- 部门树 -->
-        <el-col :span="4">
-            <el-auto-resizer>
-                <template #default="{ height, width }">
-                    <el-tree
-                        default-expand-all
-                        highlight-current
-                        empty-text="暂无数据"
-                        node-key="id"
-                        :data="dept_tree"
-                        :height="height"
-                        :width="width"
-                        :props="dept_tree_props"
-                        @node-click="handleDeptTreeClick" />
-                </template>
-            </el-auto-resizer>
-        </el-col>
         <!-- 列表 -->
-        <el-col :span="20">
-            <el-table :data="table_data" height="90%" stripe>
-                <el-table-column align="center" type="index" />
-                <el-table-column align="center" label="姓名" prop="name" />
-                <el-table-column align="center" label="邮箱" prop="email" />
-                <el-table-column align="center" label="手机" prop="tel" />
-                <el-table-column align="center" label="部门" prop="dept" />
-                <el-table-column align="center" label="岗位" prop="dept" />
-                <el-table-column align="center" label="状态" prop="state">
-                    <template #default="scope">
-                        <el-tag v-if="scope.row.state" type="success">正常</el-tag>
-                        <el-tag v-else type="danger">冻结</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="角色" prop="role" />
-                <el-table-column align="center" label="操作">
-                    <template v-slot:default="scope">
-                        <el-button link type="primary" size="small" @click="handleTableItemModify(scope.row)">
-                            编辑
-                        </el-button>
-                        <el-button link type="primary" size="small" @click="handleTableItemDelete(scope.row)">
-                            删除
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <el-pagination
-                background
-                hide-on-single-page
-                layout="total, sizes, prev, pager, next"
-                :default-page-size="pagination.default_page_size"
-                :page-sizes="pagination.page_sizes"
-                :total="pagination.total"
-                style="padding: 10px; float: right"
-                @sizeChange="handleSizeChange"
-                @currentChange="handleCurrentChange" />
-        </el-col>
+        <el-table :data="table_data" height="90%" stripe>
+            <el-table-column align="center" type="index" />
+            <el-table-column align="center" label="姓名" prop="name" />
+            <el-table-column align="center" label="邮箱" prop="email" />
+            <el-table-column align="center" label="状态" prop="state" />
+            <el-table-column align="center" label="角色" prop="role">
+                <template #default="scope">
+                    <el-tag v-for="(item, idx) in scope.row.roles" :index="idx" style="margin-right: 4px">
+                        {{ item.name }}
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作">
+                <template v-slot:default="scope">
+                    <el-button link type="primary" size="small" @click="handleTableItemModify(scope.row)">
+                        编辑
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="handleTableItemDelete(scope.row)">
+                        删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+            background
+            hide-on-single-page
+            layout="total, sizes, prev, pager, next"
+            :default-page-size="pagination.default_page_size"
+            :page-sizes="pagination.page_sizes"
+            :total="pagination.total"
+            style="padding: 10px; float: right"
+            @sizeChange="handleSizeChange"
+            @currentChange="handleCurrentChange" />
     </el-row>
     <!-- 新增或编辑 -->
     <el-dialog
@@ -114,17 +93,6 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="部门" prop="dept">
-                    <el-tree-select
-                        v-model="edit.form.dept"
-                        :data="dept_tree"
-                        placeholder="请选择部门"
-                        check-strictly
-                        default-expand-all
-                        node-key="id"
-                        :props="dept_tree_props"
-                        :render-after-expand="false" />
-                </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-select v-model="edit.form.status" placeholder="请选择状态" clearable>
                         <el-option label="激活" :value="true" />
@@ -153,10 +121,6 @@ import { ElMessageBox, type FormRules } from "element-plus";
 import UseTable from "@/hooks/UseTable.ts";
 import * as VerifyRules from "@/utils/VerifyRules.ts";
 
-const dept_tree_props = {
-    label: "name"
-};
-
 // 查询条件
 const condition = ref<UserPageParams>({
     page_num: 1,
@@ -170,33 +134,6 @@ const { handleCurrentChange, handleSizeChange, handlerConditionQuery, pagination
 );
 
 const ready = ref(false);
-
-const dept_tree = ref<Dept[]>([
-    {
-        id: "1111",
-        name: "部门1",
-        children: [
-            {
-                id: "1111-2222",
-                name: "部门1-1"
-            }
-        ]
-    },
-    {
-        id: "12311111",
-        name: "部门2",
-        children: [
-            {
-                id: "2222-11111",
-                name: "部门2-1"
-            },
-            {
-                id: "2222-2222",
-                name: "部门2-2"
-            }
-        ]
-    }
-]);
 
 // 新增或编辑
 const edit = reactive({
@@ -223,11 +160,6 @@ const edit = reactive({
 onMounted(() => {
     ready.value = true;
 });
-
-// 部门树被单机
-function handleDeptTreeClick(node: unknown) {
-    console.log(`节点被单机`, node);
-}
 
 // 表行修改按钮被单击
 function handleTableItemModify(row: User) {

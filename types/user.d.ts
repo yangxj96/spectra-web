@@ -8,7 +8,7 @@ type Token = {
     /** 权限列表 */
     authorities: string[];
     /** 角色 */
-    roles: string[];
+    roles: Role[];
 };
 
 // 用户
