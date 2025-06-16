@@ -63,13 +63,13 @@ import AuthApi from "@/api/AuthApi.ts";
 const router = useRouter();
 const loginForm = ref<FormInstance>();
 
-const user = reactive<User>({
+const user = reactive<LongParams>({
     username: "sysadmin",
     password: "sysadmin",
     code: "1234"
 });
 
-const rules = reactive<FormRules<User>>({
+const rules = reactive<FormRules<LongParams>>({
     username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
     password: [{ required: true, message: "请输入密码", trigger: "blur" }],
     code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
@@ -105,7 +105,7 @@ async function handleLogin(formElement: FormInstance | undefined) {
     });
 }
 
-interface User {
+interface LongParams {
     username: string;
     password: string;
     code: string;
