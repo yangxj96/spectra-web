@@ -16,5 +16,9 @@ export default {
                 params
             })
             .then(res => res.data);
+    },
+    // 分页查询
+    async listRole(): Promise<IResult<Role[]>> {
+        return http.get<IResult<Role[]>>("/api/permission/listRole").then(res => res.data);
     }
 };

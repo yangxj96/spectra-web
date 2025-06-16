@@ -13,10 +13,9 @@ type Token = {
 
 // 用户
 type User = BaseEntity & {
-    username: string;
-    tel: string;
+    name: string;
     email: string;
-    dept: string;
-    status: boolean;
-    role: string;
+    state: boolean;
+    roles: Role[];
+    role_ids: string[];
 };

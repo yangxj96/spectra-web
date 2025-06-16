@@ -34,8 +34,12 @@
             <el-table-column align="center" type="index" />
             <el-table-column align="center" label="姓名" prop="name" />
             <el-table-column align="center" label="邮箱" prop="email" />
-            <el-table-column align="center" label="状态" prop="state" />
-            <el-table-column align="center" label="角色" prop="role">
+            <el-table-column align="center" label="状态" prop="state">
+                <template #default="scope">
+                    <el-tag :type="scope.row.state === '正常' ? 'primary' : 'warning'">{{ scope.row.state }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="角色" prop="roles">
                 <template #default="scope">
                     <el-tag v-for="(item, idx) in scope.row.roles" :index="idx" style="margin-right: 4px">
                         {{ item.name }}
@@ -77,12 +81,15 @@
         :title="(edit.modify ? '编辑' : '新增') + '用户'"
         width="30vw">
         <template #default>
-            <el-form v-loading="edit.loading" :model="edit.form" :rules="edit.rules" label-width="auto" @submit.prevent>
-                <el-form-item label="姓名" prop="username">
-                    <el-input v-model="edit.form.username" placeholder="请输入姓名" />
-                </el-form-item>
-                <el-form-item label="手机" prop="tel">
-                    <el-input v-model="edit.form.tel" placeholder="请输入手机号码" />
+            <el-form
+                ref="formRef"
+                v-loading="edit.loading"
+                :model="edit.form"
+                :rules="edit.rules"
+                label-width="auto"
+                @submit.prevent>
+                <el-form-item label="姓名" prop="name">
+                    <el-input v-model="edit.form.name" placeholder="请输入姓名" />
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="edit.form.email" placeholder="请输入邮箱">
@@ -93,16 +100,15 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="状态" prop="status">
-                    <el-select v-model="edit.form.status" placeholder="请选择状态" clearable>
-                        <el-option label="激活" :value="true" />
-                        <el-option label="冻结" :value="false" />
+                <el-form-item label="状态" prop="state">
+                    <el-select v-model="edit.form.state" placeholder="请选择状态" clearable>
+                        <el-option label="正常" value="正常" />
+                        <el-option label="冻结" value="冻结" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="角色" prop="role">
-                    <el-select v-model="edit.form.role" placeholder="请选择角色" clearable>
-                        <el-option label="系统管理员" value="sysadmin" />
-                        <el-option label="管理员" value="admin" />
+                <el-form-item label="角色" prop="role_ids">
+                    <el-select v-model="edit.form.role_ids" value-key="id" multiple placeholder="请选择角色" clearable>
+                        <el-option v-for="item in edit.roles" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -115,11 +121,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, useTemplateRef } from "vue";
 import UserApi from "@/api/UserApi.ts";
-import { ElMessageBox, type FormRules } from "element-plus";
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import UseTable from "@/hooks/UseTable.ts";
 import * as VerifyRules from "@/utils/VerifyRules.ts";
+import _ from "lodash";
+import PermissionApi from "@/api/PermissionApi.ts";
+
+const formRef = useTemplateRef<FormInstance>("formRef");
 
 // 查询条件
 const condition = ref<UserPageParams>({
@@ -140,42 +150,60 @@ const edit = reactive({
     dialog: false,
     modify: false,
     loading: false,
+    roles: [] as Role[],
     form: {} as User,
     rules: {
-        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        tel: [
-            { required: true, message: "请输入手机号码", trigger: "blur" },
-            { validator: VerifyRules.mobile, message: "请输入正确的手机号码", trigger: "blur" }
-        ],
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
         email: [
             { required: true, message: "请输入邮箱", trigger: "blur" },
             { validator: VerifyRules.email, message: "请输入正确的邮箱", trigger: "blur" }
         ],
-        dept: [{ required: true, message: "请选择部门", trigger: "blur" }],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
-        role: [{ required: true, message: "请选择角色", trigger: "blur" }]
+        state: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        role_ids: [{ required: true, message: "请选择角色", trigger: "blur" }]
     } as FormRules
 });
 
+// 挂载后执行
 onMounted(() => {
     ready.value = true;
+    handleGetRoleList();
 });
+
+// 获取角色列表
+function handleGetRoleList() {
+    PermissionApi.listRole().then(response => {
+        edit.roles = response.data!;
+    });
+}
 
 // 表行修改按钮被单击
 function handleTableItemModify(row: User) {
+    let datum = _.cloneDeep(row);
+    if (datum.roles.length > 0) {
+        if (!datum.role_ids) {
+            datum.role_ids = [] as string[];
+        }
+        for (let role of datum.roles) {
+            datum.role_ids.push(role.id);
+        }
+        datum.roles = [];
+    }
     edit.modify = true;
-    edit.form = row;
+    edit.form = datum;
     edit.dialog = true;
 }
 
 // 表行删除按钮被单击
 function handleTableItemDelete(row: User) {
-    ElMessageBox.confirm(`是否要删除[${row.username}]`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error"
-    }).then(() => {
-        console.log(`确定删除`);
+    ElMessageBox.confirm(`是否要删除[${row.name}]`, "提示", { type: "warning" }).then(() => {
+        UserApi.deleteById(row.id).then(() => {
+            ElMessage.success({
+                message: "删除成功",
+                onClose() {
+                    handlerConditionQuery();
+                }
+            });
+        });
     });
 }
 
@@ -187,13 +215,24 @@ function handleUserAddDialog() {
 }
 
 // 新增或编辑用户
-function handleUserSave() {
-    console.log(`保存:`, edit.form);
-    edit.loading = true;
-    let i = setInterval(() => {
-        edit.loading = false;
-        clearInterval(i);
-    }, 3000);
+async function handleUserSave() {
+    if (!formRef.value) return;
+    await formRef.value?.validate(valid => {
+        if (valid) {
+            let request = edit.modify ? UserApi.modify : UserApi.created;
+            request(edit.form)
+                .finally(() => (edit.loading = false))
+                .then(() => {
+                    ElMessage.success({
+                        message: edit.modify ? "修改用户成功" : "新增用户成功",
+                        onClose() {
+                            edit.dialog = false;
+                            handlerConditionQuery();
+                        }
+                    });
+                });
+        }
+    });
 }
 </script>
 
