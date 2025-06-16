@@ -1,3 +1,5 @@
+import * as SunCalc from "suncalc";
+
 export default class CommonUtils {
     /**
      * 获取随机数
@@ -39,5 +41,24 @@ export default class CommonUtils {
      */
     public static UUIDLower() {
         return this.UUID().toLowerCase();
+    }
+
+    /**
+     * 根据经纬度获取日出日落时间后进行判断是否需要进入深色模式
+     */
+    public static shouldEnableDarkMode() {
+        let lat = 25.526_473_000_000_014;
+        let lon = 103.792_161_999_999_96;
+        const now = new Date();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                lat = position.coords.latitude;
+                lon = position.coords.longitude;
+            });
+        }
+        //sunrise = 日出 sunset = 日落
+        const { sunrise, sunset } = SunCalc.getTimes(now, lat, lon);
+        // 日出前 或 日落后，开启深色模式
+        return now < sunrise || now >= sunset;
     }
 }
