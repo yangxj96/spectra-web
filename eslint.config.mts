@@ -39,7 +39,9 @@ const sharedRules = {
     // 变量命名规则
     "unicorn/prevent-abbreviations": "off",
     // 使用structuredClone方法
-    "unicorn/prefer-structured-clone": "off"
+    "unicorn/prefer-structured-clone": "off",
+    // 注释
+    "unicorn/no-abusive-eslint-disable": "off"
 };
 
 export default [

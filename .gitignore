@@ -7,6 +7,10 @@ build/
 .flattened-pom.xml
 target
 
+## autoimport
+auto-imports.d.ts
+components.d.ts
+
 ### custom        ###
 document/jar
 

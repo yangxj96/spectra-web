@@ -5,7 +5,6 @@
 <script lang="ts" setup>
 import "echarts";
 import VChart from "vue-echarts";
-import { ref } from "vue";
 
 const option = ref({
     xAxis: {

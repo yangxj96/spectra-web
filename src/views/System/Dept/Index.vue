@@ -104,7 +104,7 @@ function handleCriteriaQuery() {
             code: "BMDM-0" + i,
             sort: i,
             remark: "我是我是备注我是备注我是备注我是备注我是备注我是备注备注",
-            children: [] as Dept
+            children: new Array<Dept>()
         };
         for (let i = 0; i < 3; i++) {
             datum.children.push({

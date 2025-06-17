@@ -5,8 +5,6 @@ import { createStore } from "@/plugin/store";
 import router from "@/plugin/router";
 // element自定义的样式文件
 import "@/plugin/element/index.scss";
-// element全局指令
-import ElementPlus from "element-plus";
 // 使用 vueuse 控制深色模式
 import { useDark, useToggle } from "@vueuse/core";
 import CommonUtils from "@/utils/CommonUtils.ts";
@@ -17,5 +15,5 @@ const toggleDark = useToggle(isDark);
 toggleDark(CommonUtils.shouldEnableDarkMode());
 
 export default function loadPlugins(app: App) {
-    app.use(createStore()).use(router).use(ElementPlus);
+    app.use(createStore()).use(router);
 }

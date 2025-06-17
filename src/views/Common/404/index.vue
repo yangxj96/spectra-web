@@ -7,9 +7,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
-import { useRouter } from "vue-router";
-
 const router = useRouter();
 
 const time = ref<number>(-1);

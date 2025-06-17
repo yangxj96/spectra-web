@@ -42,7 +42,7 @@
                 </el-form>
             </div>
             <template #footer>
-                <el-button type="primary" @click="handleLogin(loginForm)">
+                <el-button type="primary" @click="handleLogin">
                     <icons name="icon-login" />
                     <span>&nbsp;登录</span>
                 </el-button>
@@ -52,19 +52,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
-import { ElMessage } from "element-plus";
-import { Picture as IconPicture } from "@element-plus/icons-vue";
-import { useRouter } from "vue-router";
-import useUserStore from "@/plugin/store/modules/useUserStore";
 import AuthApi from "@/api/AuthApi.ts";
+import useUserStore from "@/plugin/store/modules/useUserStore";
+import { type FormRules, ElForm, ElMessage } from "element-plus";
 
 const router = useRouter();
-const loginForm = ref<FormInstance>();
+const logingRef = useTemplateRef<InstanceType<typeof ElForm>>("loginForm");
 
 const user = reactive<LongParams>({
-    username: "sysadmin",
+    username: "yangxj96@gmail.com",
     password: "sysadmin",
     code: "1234"
 });
@@ -75,13 +71,13 @@ const rules = reactive<FormRules<LongParams>>({
     code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
 });
 
-async function handleLogin(formElement: FormInstance | undefined) {
+async function handleLogin() {
     // 没获取到表单对象
-    if (!formElement) {
+    if (!logingRef) {
         return;
     }
     // 开始验证
-    await formElement.validate((valid, fields) => {
+    await logingRef.value?.validate((valid, fields) => {
         if (!valid) {
             ElMessage.error({
                 message: "请检查表单"
