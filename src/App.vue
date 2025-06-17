@@ -1,11 +1,3 @@
-<template>
-    <div id="nav">
-        <el-config-provider :locale="locale" :message="message">
-            <router-view />
-        </el-config-provider>
-    </div>
-</template>
-
 <script lang="ts" setup>
 import useAppStore from "@/plugin/store/modules/useAppStore";
 
@@ -16,6 +8,14 @@ const message = reactive({
     plain: true
 });
 </script>
+
+<template>
+    <div id="nav">
+        <el-config-provider :locale="locale" :message="message">
+            <router-view />
+        </el-config-provider>
+    </div>
+</template>
 
 <style lang="scss">
 @use "@/assets/css/common.scss";

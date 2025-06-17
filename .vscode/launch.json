@@ -7,7 +7,7 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against npm start",
+            "name": "调试启动",
             "url": "http://localhost:5173", // 默认 Vite 开发服务器端口
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "Run npm start",
