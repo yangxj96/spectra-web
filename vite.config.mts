@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from "url";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import viteCompression from "vite-plugin-compression";
 
 export default defineConfig(({ mode }) => {
     const root = process.cwd();
@@ -13,7 +14,7 @@ export default defineConfig(({ mode }) => {
     return {
         base: "./",
         server: {
-            open: true,
+            open: false,
             watch: {
                 usePolling: true
             }
@@ -29,7 +30,8 @@ export default defineConfig(({ mode }) => {
             Components({
                 resolvers: [ElementPlusResolver()],
                 dts: "./types/components.d.ts"
-            })
+            }),
+            viteCompression({})
         ],
         css: {
             preprocessorOptions: {
@@ -45,7 +47,46 @@ export default defineConfig(({ mode }) => {
             }
         },
         build: {
-            outDir: "build"
+            minify: "terser",
+            outDir: "build",
+            rollupOptions: {
+                output: {
+                    assetFileNames: chunkInfo => {
+                        // 使用 names[0] 获取文件名
+                        const fileName = chunkInfo.names.length > 0 ? chunkInfo.names[0] : "";
+
+                        let dir = "other";
+
+                        if (/\.png|jpe?g|gif|svg|webp|avif$/i.test(fileName)) {
+                            dir = "img";
+                        } else if (/\.ttf|otf|woff2?|eot$/i.test(fileName)) {
+                            dir = "fonts";
+                        } else if (/\.mp4|webm|ogg|mp3|wav|flac|aac$/i.test(fileName)) {
+                            dir = "media";
+                        } else if (/\.css$/i.test(fileName)) {
+                            return `css/[name]-[hash][extname]`;
+                        }
+
+                        return `assets/${dir}/[name]-[hash][extname]`;
+                    },
+                    chunkFileNames: "assets/js/[name]-[hash].js",
+                    entryFileNames: "assets/js/[name]-[hash].js"
+                }
+            },
+            terserOptions: {
+                compress: {
+                    // 移除所有的 console.* 调用
+                    drop_console: true,
+                    // 移除 debugger 语句
+                    drop_debugger: true,
+                    // 更细粒度控制
+                    pure_funcs: ["console.log", "console.info", "console.warn", "console.error"]
+                },
+                format: {
+                    // 移除注释
+                    comments: true
+                }
+            }
         }
     };
 });

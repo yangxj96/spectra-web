@@ -6,7 +6,6 @@ import pluginVue from "eslint-plugin-vue";
 import pluginUnicorn from "eslint-plugin-unicorn";
 import pluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import pluginTypescript from "@typescript-eslint/eslint-plugin";
-import type { Linter } from "eslint";
 
 // 共享规则
 const sharedRules = {
@@ -86,4 +85,4 @@ export default [
         }
     },
     pluginPrettierRecommended
-] satisfies Linter.Config[];
+];

@@ -27,7 +27,7 @@
                                 <el-input v-model="user.code" placeholder="请输入验证码" />
                             </el-col>
                             <el-col :span="12">
-                                <el-image src="/src/assets/images/vcode.png" class="v-code">
+                                <el-image :src="vCode" class="v-code">
                                     <template #error>
                                         <div class="image-slot">
                                             <el-icon>
@@ -55,6 +55,7 @@
 import AuthApi from "@/api/AuthApi.ts";
 import useUserStore from "@/plugin/store/modules/useUserStore";
 import { type FormRules, ElForm, ElMessage } from "element-plus";
+import vCode from "@/assets/images/vcode.png";
 
 const router = useRouter();
 const logingRef = useTemplateRef<InstanceType<typeof ElForm>>("loginForm");

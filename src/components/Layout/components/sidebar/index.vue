@@ -27,8 +27,6 @@
 
 <script lang="ts" setup>
 import { stopAllRequest } from "@/plugin/request";
-import { useRoute } from "vue-router";
-import { onMounted, ref } from "vue";
 import useAppStore from "@/plugin/store/modules/useAppStore.ts";
 
 const route = useRoute();

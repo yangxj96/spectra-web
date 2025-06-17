@@ -7,7 +7,6 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
 import useAppStore from "@/plugin/store/modules/useAppStore";
 
 const locale = ref(useAppStore().lang);

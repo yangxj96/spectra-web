@@ -69,10 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import Navbar from "@/components/Layout/components/navbar/index.vue";
-import Sidebar from "@/components/Layout/components/sidebar/index.vue";
-import { type RouteLocationMatched, useRouter } from "vue-router";
-import { onMounted, ref, useTemplateRef, watch } from "vue";
+import { type RouteLocationMatched } from "vue-router";
 import useAppStore from "@/plugin/store/modules/useAppStore.ts";
 import { useDark, useFullscreen, useToggle } from "@vueuse/core";
 

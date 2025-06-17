@@ -9,7 +9,7 @@
         <el-col :span="1">
             <el-dropdown>
                 <img
-                    src="@/assets/images/avatar.png"
+                    :src="avatar"
                     alt="default avatar"
                     style="object-fit: cover"
                     class="el-avatar el-avatar--circle el-tooltip__trigger" />
@@ -39,13 +39,11 @@
 <script lang="ts" setup>
 import AuthApi from "@/api/AuthApi.ts";
 import GlobalUtils from "@/utils/GlobalUtils";
-import changePassword from "@/components/Props/ChangePassword/index.vue";
-import personalDetails from "@/components/Props/PersonalDetails/index.vue";
-import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus/es";
 import useStore from "@/plugin/store";
 import { stopAllRequest } from "@/plugin/request";
 import logo from "@/assets/images/logo.svg";
+import avatar from "@/assets/images/avatar.png";
 
 const router = useRouter();
 
