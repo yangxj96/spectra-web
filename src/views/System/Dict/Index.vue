@@ -83,7 +83,19 @@ const handleSaveDictType = () => {
     if (!editFrom.value) return;
     editFrom.value?.validate(valid => {
         if (valid) {
-            DictApi.createType(edit.form).then(() => handleDialogClose);
+            DictApi.createType(edit.form).then((res: IResult<unknown>) => {
+                if (res.code === 200) {
+                    ElMessage.success({
+                        message: "保存成功",
+                        duration: 1000,
+                        onClose() {
+                            handleDialogClose();
+                        }
+                    });
+                } else {
+                    ElMessage.error(res.msg || "保存失败");
+                }
+            });
         }
     });
 };
