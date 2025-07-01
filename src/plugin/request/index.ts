@@ -3,6 +3,7 @@ import { hideLoading, showLoading } from "@/plugin/element/loading";
 import { ElMessage } from "element-plus/es";
 import useUserStore from "@/plugin/store/modules/useUserStore";
 import GlobalUtils from "@/utils/GlobalUtils.ts";
+import qs from "qs";
 
 // 常见内容类型
 // application/x-www-form-urlencoded
@@ -14,8 +15,28 @@ const http = axios.create({
     withCredentials: false,
     headers: {
         "Content-Type": "application/json"
-    }
+    },
+    paramsSerializer: paramsSerializer
 });
+
+/**
+ * 自定义 paramsSerializer，用于 axios 请求参数的序列化，支持嵌套对象和数组。
+ * @param params - 请求参数对象（支持嵌套对象和数组）
+ * @returns 序列化后的查询字符串
+ */
+function paramsSerializer(params: Record<string, unknown>): string {
+    console.log(`执行序列化`, params);
+    // 使用 qs.stringify 处理嵌套对象和数组
+    let res = qs.stringify(params, {
+        arrayFormat: "indices", // 支持数组格式化，默认为 brackets 格式
+        allowDots: true, // 是否使用点符号表示嵌套对象，默认为 false
+        encoder: (str: string) => {
+            return encodeURIComponent(str);
+        }
+    });
+    console.log(`序列化结果`, res);
+    return res;
+}
 
 export const clean: Canceler[] = [];
 

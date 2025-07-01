@@ -22,12 +22,22 @@ type Pagination = {
     default_page_size: number;
     total: number;
 };
+
 /**
  * 基础分页请求参数
  */
 type BasePageParams = {
     page_size: number;
     page_num: number;
+    orders?: OrderItem[];
+};
+
+/**
+ * 排序字段
+ */
+type OrderItem = {
+    column: string;
+    asc: boolean;
 };
 
 /**

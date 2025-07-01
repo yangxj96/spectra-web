@@ -30,11 +30,11 @@
     <!-- 数据区 -->
     <el-row class="box-body">
         <!-- 列表 -->
-        <el-table :data="table_data" height="90%" stripe>
+        <el-table :data="table_data" height="90%" stripe @sort-change="handleTableSortChange">
             <el-table-column align="center" type="index" />
-            <el-table-column align="center" label="姓名" prop="name" />
-            <el-table-column align="center" label="邮箱" prop="email" />
-            <el-table-column align="center" label="状态" prop="state">
+            <el-table-column align="center" :sortable="true" label="姓名" prop="name" />
+            <el-table-column align="center" :sortable="true" label="邮箱" prop="email" />
+            <el-table-column align="center" :sortable="true" label="状态" prop="state">
                 <template #default="scope">
                     <el-tag :type="scope.row.state === '正常' ? 'primary' : 'warning'">{{ scope.row.state }}</el-tag>
                 </template>
@@ -126,7 +126,7 @@ import UserApi from "@/api/UserApi.ts";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import UseTable from "@/hooks/UseTable.ts";
 import * as VerifyRules from "@/utils/VerifyRules.ts";
-import _ from "lodash";
+import _, { orderBy } from "lodash";
 import PermissionApi from "@/api/PermissionApi.ts";
 
 const formRef = useTemplateRef<FormInstance>("formRef");
@@ -233,6 +233,17 @@ async function handleUserSave() {
                 });
         }
     });
+}
+
+// 排序字段改变
+function handleTableSortChange(data: { column: User; prop: string; order: string }) {
+    console.log(`排序字段改变: ${data.prop}, 排序方式: ${data.order}`);
+    let order: OrderItem = {
+        column: data.prop,
+        asc: data.order === "ascending"
+    };
+    condition.value.orders = [order];
+    handlerConditionQuery();
 }
 </script>
 
