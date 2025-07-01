@@ -107,3 +107,77 @@ type Dept = BaseEntity & {
      */
     children?: Dept[];
 };
+
+/**
+ * 字典组
+ */
+type DictType = BaseEntity & {
+    /**
+     * 父级ID
+     */
+    pid: string;
+    /**
+     * 字典类型名称
+     */
+    name: string;
+    /**
+     * 字典类型编码
+     */
+    code: string;
+    /**
+     * 状态
+     */
+    state: string;
+    /**
+     * 备注
+     */
+    remark: string;
+    /**
+     * 是否内置
+     */
+    builtin?: boolean;
+    /**
+     * 是否隐藏
+     */
+    hide?: boolean;
+};
+
+/**
+ * 字典组树形结构
+ */
+type DictTypeTree = DictType & {
+    /**
+     * 下级内容
+     */
+    children?: DictTypeTree[];
+};
+
+/**
+ * 字典数据
+ */
+type DictData = BaseEntity & {
+    /**
+     * 字典组ID
+     */
+    dict_type_id: string;
+    /**
+     * 字典标签
+     */
+    label: string;
+    /**
+     * 字典值
+     */
+    value: string;
+    /**
+     * 排序
+     */
+    sort: number;
+    /**
+     * 状态
+     */
+    state: string;
+    /**
+     * 备注
+     */
+    remark: string;
+};
