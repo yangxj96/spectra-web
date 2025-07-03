@@ -111,7 +111,7 @@ type Dept = BaseEntity & {
 /**
  * 字典组
  */
-type DictType = BaseEntity & {
+type DictGroup = BaseEntity & {
     /**
      * 父级ID
      */
@@ -145,7 +145,7 @@ type DictType = BaseEntity & {
 /**
  * 字典组树形结构
  */
-type DictTypeTree = DictType & {
+type DictTypeTree = DictGroup & {
     /**
      * 下级内容
      */
