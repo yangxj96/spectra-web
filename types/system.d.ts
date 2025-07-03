@@ -131,7 +131,7 @@ type DictGroup = BaseEntity & {
     /**
      * 备注
      */
-    remark: string;
+    remark?: string;
     /**
      * 是否内置
      */
@@ -179,5 +179,5 @@ type DictData = BaseEntity & {
     /**
      * 备注
      */
-    remark: string;
+    remark?: string;
 };

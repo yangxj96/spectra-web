@@ -1,27 +1,28 @@
+import { z } from "zod";
+
+const DictDataSchema = z.object({
+    id: z.string(),
+    dict_type_id: z.string(),
+    label: z.string(),
+    value: z.string(),
+    sort: z.number(),
+    remark: z.string().optional()
+});
+
 export function isDictData(data: unknown): data is DictData {
-    return (
-        typeof data === "object" &&
-        data !== null &&
-        "id" in data &&
-        "dict_type_id" in data &&
-        "label" in data &&
-        "value" in data &&
-        "sort" in data &&
-        "state" in data &&
-        "remark" in data
-    );
+    return DictDataSchema.safeParse(data).success;
 }
 
+const DictGroupSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    code: z.string(),
+    state: z.string(),
+    remark: z.string().optional(),
+    builtin: z.boolean().optional(),
+    hide: z.boolean().optional()
+});
+
 export function isDictGroup(data: unknown): data is DictGroup {
-    return (
-        typeof data === "object" &&
-        data !== null &&
-        "id" in data &&
-        "name" in data &&
-        "code" in data &&
-        "state" in data &&
-        "remark" in data &&
-        "builtin" in data &&
-        "hide" in data
-    );
+    return DictGroupSchema.safeParse(data).success;
 }

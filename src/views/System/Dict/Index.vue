@@ -21,6 +21,7 @@ const dataEditForm = useTemplateRef<FormInstance>("dataEditForm");
 // 定义字典组编辑对话框的状态和表单数据
 const groupEdit = reactive({
     visible: false,
+    loading: false,
     edit: false,
     rules: {
         name: [
@@ -46,6 +47,7 @@ const groupEdit = reactive({
 // 定义字典数据编辑对话框的状态和表单数据
 const dataEdit = reactive({
     visible: false,
+    loading: false,
     edit: false,
     rules: {
         dict_type_id: [{ required: true, message: "请选择所属字典组", trigger: "blur" }],
@@ -71,6 +73,22 @@ const dataEdit = reactive({
     } as DictData
 });
 
+const currentGroup = ref<DictGroup>();
+
+// 监听当前字典组的变化
+watch(
+    () => currentGroup.value,
+    newVal => {
+        if (newVal) {
+            // 如果当前字典组有值，获取对应的字典数据
+            handleGetDictDataByTypeCode();
+        } else {
+            // 如果没有选中任何字典组，清空字典数据表格
+            dictDataTableData.value = [];
+        }
+    }
+);
+
 // 初始化数据
 const initData = () => {
     DictApi.getTypesGroupTree().then(res => {
@@ -82,12 +100,16 @@ const initData = () => {
 
 // 处理树节点点击事件
 const handleNodeClick = (data: DictTypeTree) => {
-    DictApi.getDataByTypeCode(data.code).then(res => {
+    currentGroup.value = data;
+};
+
+// 根据字典组CODE获取字典数据
+const handleGetDictDataByTypeCode = () => {
+    DictApi.getDataByTypeCode(currentGroup.value!.code).then(res => {
         if (res.code === 200) {
-            // 处理字典项数据
             dictDataTableData.value = res.data!;
         } else {
-            ElMessage.error("获取字典项数据失败");
+            ElMessage.error("获取字典数据失败");
         }
     });
 };
@@ -96,17 +118,16 @@ const handleNodeClick = (data: DictTypeTree) => {
 const handleDialogGroupOpen = (row: DictGroup | unknown) => {
     groupEdit.visible = true;
     groupEdit.edit = isDictGroup(row);
-    groupEdit.form =
-        typeof row === "object" && row !== null
-            ? ({ ...row } as DictGroup)
-            : {
-                  id: "",
-                  pid: "",
-                  name: "",
-                  code: "",
-                  state: "启用",
-                  remark: ""
-              };
+    groupEdit.form = isDictGroup(row)
+        ? ({ ...row } as DictGroup)
+        : {
+              id: "",
+              pid: "",
+              name: "",
+              code: "",
+              state: "启用",
+              remark: ""
+          };
     if (groupEditFrom.value) {
         groupEditFrom.value.resetFields();
     }
@@ -116,18 +137,17 @@ const handleDialogGroupOpen = (row: DictGroup | unknown) => {
 const handleDialogDataOpen = (row: DictData | unknown) => {
     dataEdit.visible = true;
     dataEdit.edit = isDictData(row);
-    dataEdit.form =
-        typeof row === "object" && row !== null
-            ? ({ ...row } as DictData)
-            : {
-                  id: "",
-                  dict_type_id: "",
-                  label: "",
-                  value: "",
-                  sort: 999,
-                  state: "启用",
-                  remark: ""
-              };
+    dataEdit.form = isDictData(row)
+        ? ({ ...row } as DictData)
+        : {
+              id: "",
+              dict_type_id: "",
+              label: "",
+              value: "",
+              sort: 999,
+              state: "启用",
+              remark: ""
+          };
     if (dataEditForm.value) {
         dataEditForm.value.resetFields();
     }
@@ -150,21 +170,31 @@ const handleDialogClose = () => {
 const handleSaveDictType = () => {
     if (!groupEditFrom.value) return;
     groupEditFrom.value?.validate(valid => {
-        if (valid) {
-            DictApi.createType(groupEdit.form).then((res: IResult<unknown>) => {
+        if (!valid) {
+            ElMessage.error("请检查必填内容");
+            return;
+        }
+        groupEdit.loading = true;
+        let request = groupEdit.edit ? DictApi.modifyGroup : DictApi.createGroup;
+        request(groupEdit.form)
+            .finally(() => {
+                groupEdit.loading = false;
+            })
+            .then((res: IResult<unknown>) => {
                 if (res.code === 200) {
                     ElMessage.success({
                         message: "保存成功",
                         duration: 1000,
                         onClose() {
                             handleDialogClose();
+                            // 清空当前字典组
+                            currentGroup.value = undefined;
                         }
                     });
                 } else {
                     ElMessage.error(res.msg || "保存失败");
                 }
             });
-        }
     });
 };
 
@@ -172,21 +202,30 @@ const handleSaveDictType = () => {
 const handleSaveDictData = () => {
     if (!dataEditForm.value) return;
     dataEditForm.value?.validate(valid => {
-        if (valid) {
-            DictApi.createData(dataEdit.form).then((res: IResult<unknown>) => {
+        if (!valid) {
+            ElMessage.error("请检查必填内容");
+            return;
+        }
+        dataEdit.loading = true;
+        let request = dataEdit.edit ? DictApi.modifyData : DictApi.createData;
+        request(dataEdit.form)
+            .finally(() => {
+                dataEdit.loading = false;
+            })
+            .then((res: IResult<unknown>) => {
                 if (res.code === 200) {
                     ElMessage.success({
                         message: "保存成功",
                         duration: 1000,
                         onClose() {
                             handleDialogClose();
+                            handleGetDictDataByTypeCode();
                         }
                     });
                 } else {
                     ElMessage.error(res.msg || "保存失败");
                 }
             });
-        }
     });
 };
 
@@ -251,9 +290,16 @@ initData();
     </div>
 
     <!-- 字典类型编辑框 -->
-    <el-dialog v-model="groupEdit.visible" :title="(groupEdit.edit ? '编辑' : '新增') + '字典组'" width="500">
+    <el-dialog
+        v-model="groupEdit.visible"
+        v-loading="groupEdit.loading"
+        :title="(groupEdit.edit ? '编辑' : '新增') + '字典组'"
+        width="500">
         <template #default>
             <el-form ref="groupEditFrom" :model="groupEdit.form" :rules="groupEdit.rules" label-width="auto">
+                <el-form-item v-if="groupEdit.edit" label="主键ID">
+                    <p>{{ groupEdit.form.id }}</p>
+                </el-form-item>
                 <el-form-item label="上级字典组" prop="pid">
                     <el-tree-select
                         v-model="groupEdit.form.pid"
@@ -281,16 +327,23 @@ initData();
         </template>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="handleDialogClose">取消</el-button>
-                <el-button type="primary" @click="handleSaveDictType">确认</el-button>
+                <el-button :disable="groupEdit.loading" @click="handleDialogClose">取消</el-button>
+                <el-button :disable="groupEdit.loading" type="primary" @click="handleSaveDictType">确认</el-button>
             </div>
         </template>
     </el-dialog>
 
     <!-- 字典组编辑框 -->
-    <el-dialog v-model="dataEdit.visible" :title="(dataEdit.edit ? '编辑' : '新增') + '字典数据'" width="500">
+    <el-dialog
+        v-model="dataEdit.visible"
+        v-loading="dataEdit.loading"
+        :title="(dataEdit.edit ? '编辑' : '新增') + '字典数据'"
+        width="500">
         <template #default>
             <el-form ref="dataEditForm" :model="dataEdit.form" :rules="dataEdit.rules" label-width="auto">
+                <el-form-item v-if="dataEdit.edit" label="主键ID">
+                    <p>{{ dataEdit.form.id }}</p>
+                </el-form-item>
                 <el-form-item label="所属字典组" prop="dict_type_id">
                     <el-tree-select
                         v-model="dataEdit.form.dict_type_id"
@@ -326,8 +379,8 @@ initData();
         </template>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="handleDialogClose">取消</el-button>
-                <el-button type="primary" @click="handleSaveDictData">确认</el-button>
+                <el-button :disable="dataEdit.loading" @click="handleDialogClose">取消</el-button>
+                <el-button :disable="dataEdit.loading" type="primary" @click="handleSaveDictData">确认</el-button>
             </div>
         </template>
     </el-dialog>
