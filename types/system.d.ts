@@ -159,7 +159,7 @@ type DictData = BaseEntity & {
     /**
      * 字典组ID
      */
-    dict_type_id: string;
+    gid: string;
     /**
      * 字典标签
      */

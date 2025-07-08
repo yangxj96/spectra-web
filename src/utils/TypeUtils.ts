@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const DictDataSchema = z.object({
     id: z.string(),
-    dict_type_id: z.string(),
+    gid: z.string(),
     label: z.string(),
     value: z.string(),
     sort: z.number(),

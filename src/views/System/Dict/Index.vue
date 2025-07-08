@@ -50,7 +50,7 @@ const dataEdit = reactive({
     loading: false,
     edit: false,
     rules: {
-        dict_type_id: [{ required: true, message: "请选择所属字典组", trigger: "blur" }],
+        gid: [{ required: true, message: "请选择所属字典组", trigger: "blur" }],
         label: [
             { required: true, message: "请输入字典项名称", trigger: "blur" },
             { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" }
@@ -64,7 +64,7 @@ const dataEdit = reactive({
     },
     form: {
         id: "",
-        dict_type_id: "",
+        gid: "",
         label: "",
         value: "",
         sort: 999,
@@ -141,7 +141,7 @@ const handleDialogDataOpen = (row: DictData | unknown) => {
         ? ({ ...row } as DictData)
         : {
               id: "",
-              dict_type_id: currentGroup.value?.id || "",
+              gid: currentGroup.value?.id || "",
               label: "",
               value: "",
               sort: 999,
@@ -361,9 +361,9 @@ initData();
                 <el-form-item v-if="dataEdit.edit" label="主键ID">
                     <p>{{ dataEdit.form.id }}</p>
                 </el-form-item>
-                <el-form-item label="所属字典组" prop="dict_type_id">
+                <el-form-item label="所属字典组" prop="gid">
                     <el-tree-select
-                        v-model="dataEdit.form.dict_type_id"
+                        v-model="dataEdit.form.gid"
                         default-expand-all
                         :data="dictGroupTableData"
                         node-key="id"
