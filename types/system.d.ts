@@ -127,7 +127,7 @@ type DictGroup = BaseEntity & {
     /**
      * 状态
      */
-    state: string;
+    state: number;
     /**
      * 备注
      */
@@ -175,7 +175,7 @@ type DictData = BaseEntity & {
     /**
      * 状态
      */
-    state: string;
+    state: number;
     /**
      * 备注
      */

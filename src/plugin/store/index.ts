@@ -2,6 +2,7 @@ import useAppStore from "@/plugin/store/modules/useAppStore";
 import usePropsStore from "@/plugin/store/modules/usePropsStore";
 import useUserStore from "@/plugin/store/modules/useUserStore";
 import useTabsStore from "@/plugin/store/modules/useTabsStore";
+import useDictStore from "@/plugin/store/modules/useDictStore";
 import { createPinia } from "pinia";
 import { createPersistedState } from "pinia-plugin-persistedstate";
 
@@ -27,6 +28,7 @@ export default function useStore() {
         app: useAppStore(),
         props: usePropsStore(),
         user: useUserStore(),
-        tabs: useTabsStore()
+        tabs: useTabsStore(),
+        dict: useDictStore()
     };
 }
