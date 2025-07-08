@@ -122,10 +122,10 @@ const handleDialogGroupOpen = (row: DictGroup | unknown) => {
         ? ({ ...row } as DictGroup)
         : {
               id: "",
-              pid: "",
+              pid: currentGroup.value?.id || "",
               name: "",
               code: "",
-              state: "启用",
+              state: "",
               remark: ""
           };
     if (groupEditFrom.value) {
@@ -141,7 +141,7 @@ const handleDialogDataOpen = (row: DictData | unknown) => {
         ? ({ ...row } as DictData)
         : {
               id: "",
-              dict_type_id: "",
+              dict_type_id: currentGroup.value?.id || "",
               label: "",
               value: "",
               sort: 999,
@@ -259,7 +259,22 @@ initData();
                     :data="dictGroupTableData"
                     default-expand-all
                     :props="treeProps"
-                    @node-click="handleNodeClick" />
+                    @node-click="handleNodeClick">
+                    <template #default="{ node, data }">
+                        <p class="tree-node__label">
+                            {{ node.label }}
+                            <icons v-if="data.builtin" name="icon-builtin" class-name="icon-sidebar" />
+                            <el-button
+                                v-if="!data.builtin"
+                                class="tree-node__label-btn"
+                                link
+                                type="primary"
+                                @click="handleDialogGroupOpen(data)">
+                                编辑
+                            </el-button>
+                        </p>
+                    </template>
+                </el-tree>
             </el-col>
             <el-col :span="20">
                 <el-table :data="dictDataTableData" row-key="id" stripe height="78vh">
@@ -277,8 +292,8 @@ initData();
                             </el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="备注" prop="remark" />
-                    <el-table-column align="center" label="操作">
+                    <el-table-column align="center" label="备注" prop="remark" :show-overflow-tooltip="true" />
+                    <el-table-column v-if="!currentGroup?.builtin" align="center" label="操作">
                         <template #default="scope">
                             <el-button link type="primary" @click="handleDialogDataOpen(scope.row)">编辑</el-button>
                             <el-button link type="primary">删除</el-button>
@@ -303,25 +318,27 @@ initData();
                 <el-form-item label="上级字典组" prop="pid">
                     <el-tree-select
                         v-model="groupEdit.form.pid"
+                        clearable
                         default-expand-all
                         :data="dictGroupTableData"
                         node-key="id"
                         :props="treeProps" />
                 </el-form-item>
                 <el-form-item label="字典名称" prop="name">
-                    <el-input v-model="groupEdit.form.name" placeholder="请输入字典名称" />
+                    <el-input v-model="groupEdit.form.name" clearable placeholder="请输入字典名称" />
                 </el-form-item>
                 <el-form-item label="字典编码" prop="code">
-                    <el-input v-model="groupEdit.form.code" placeholder="请输入字典编码" />
+                    <el-input v-model="groupEdit.form.code" clearable placeholder="请输入字典编码" />
                 </el-form-item>
                 <el-form-item label="字典状态" prop="state">
-                    <el-select v-model="groupEdit.form.state" placeholder="请选择字典状态">
-                        <el-option label="启用" value="启用" />
-                        <el-option label="禁用" value="禁用" />
-                    </el-select>
+                    <!-- <el-select v-model="groupEdit.form.state" clearable placeholder="请选择字典状态"></el-select> -->
+                    <dict-select
+                        v-model="groupEdit.form.state"
+                        dict_code="sys_common_state"
+                        placeholder="请选择字典状态" />
                 </el-form-item>
                 <el-form-item label="字典描述">
-                    <el-input v-model="groupEdit.form.remark" type="textarea" placeholder="请输入字典描述" />
+                    <el-input v-model="groupEdit.form.remark" clearable type="textarea" placeholder="请输入字典描述" />
                 </el-form-item>
             </el-form>
         </template>
@@ -385,3 +402,18 @@ initData();
         </template>
     </el-dialog>
 </template>
+
+<style scoped lang="scss">
+.icon-sidebar {
+    width: 1.3em;
+    height: 1.3em;
+}
+
+.tree-node__label {
+    width: 100%;
+}
+
+.tree-node__label-btn {
+    float: right;
+}
+</style>

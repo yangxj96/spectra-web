@@ -4,7 +4,7 @@ import App from "./App.vue";
 import loadPlugins from "@/plugin";
 import loadDirective from "@/directive";
 // iconfont
-import "//at.alicdn.com/t/c/font_3119163_7ejb5f2wrhs.js";
+import "//at.alicdn.com/t/c/font_3119163_m7gxyti0hks.js";
 import Icons from "@/components/common/Icons.vue";
 
 // 判断是否是刷新进来的

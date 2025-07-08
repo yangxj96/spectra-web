@@ -25,7 +25,6 @@ const http = axios.create({
  * @returns 序列化后的查询字符串
  */
 function paramsSerializer(params: Record<string, unknown>): string {
-    console.log(`执行序列化`, params);
     // 使用 qs.stringify 处理嵌套对象和数组
     let res = qs.stringify(params, {
         arrayFormat: "indices", // 支持数组格式化，默认为 brackets 格式
@@ -34,7 +33,6 @@ function paramsSerializer(params: Record<string, unknown>): string {
             return encodeURIComponent(str);
         }
     });
-    console.log(`序列化结果`, res);
     return res;
 }
 
