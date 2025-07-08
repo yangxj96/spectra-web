@@ -1,5 +1,7 @@
 import { type RouteRecordRaw } from "vue-router";
-import layout from "@/components/Layout/index.vue";
+
+// import layout from "@/components/Layout/index.vue";
+const layout = () => import("@/components/Layout/index.vue");
 
 /**
  * 通用的路由,所有人都有的

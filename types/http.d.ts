@@ -3,7 +3,7 @@
 /**
  * 响应整体
  */
-type IResult<T = never> = {
+type IResult<T = unknown> = {
     code: number;
     msg: string;
     data?: T;

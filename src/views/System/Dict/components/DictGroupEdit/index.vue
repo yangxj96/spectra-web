@@ -99,7 +99,12 @@ function handleSaveDictGroup() {
 <template>
     <el-dialog v-model="dialog.visible" :title="dialog.title" width="500">
         <template #default>
-            <el-form ref="editForm" :model="edit.form" :rules="edit.rules" label-width="auto">
+            <el-form
+                ref="editForm"
+                v-loading="dialog.loading"
+                :model="edit.form"
+                :rules="edit.rules"
+                label-width="auto">
                 <el-form-item v-if="has_edit" label="主键ID">
                     <p>{{ edit.form.id }}</p>
                 </el-form-item>
@@ -128,8 +133,8 @@ function handleSaveDictGroup() {
         </template>
         <template #footer>
             <div class="dialog-footer">
-                <el-button :disable="dialog.loading" @click="$emit('close')">取消</el-button>
-                <el-button :disable="dialog.loading" type="primary" @click="handleSaveDictGroup">确认</el-button>
+                <el-button :loading="dialog.loading" @click="$emit('close')">取消</el-button>
+                <el-button :loading="dialog.loading" type="primary" @click="handleSaveDictGroup">确认</el-button>
             </div>
         </template>
     </el-dialog>
