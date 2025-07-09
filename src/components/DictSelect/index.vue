@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, type Prop } from "vue";
+import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import UseDictStore from "@/plugin/store/modules/useDictStore";
 

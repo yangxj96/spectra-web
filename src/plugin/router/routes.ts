@@ -1,6 +1,5 @@
 import { type RouteRecordRaw } from "vue-router";
 
-// import layout from "@/components/Layout/index.vue";
 const layout = () => import("@/components/Layout/index.vue");
 
 /**

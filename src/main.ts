@@ -5,7 +5,6 @@ import loadPlugins from "@/plugin";
 import loadDirective from "@/directive";
 // iconfont
 import "//at.alicdn.com/t/c/font_3119163_m7gxyti0hks.js";
-import Icons from "@/components/common/Icons.vue";
 
 // 判断是否是刷新进来的
 const navigationEntries = globalThis.performance?.getEntriesByType?.("navigation");
@@ -18,5 +17,4 @@ if (navigationEntry?.type === "reload") {
 const app = createApp(App);
 loadPlugins(app);
 loadDirective(app);
-app.component("icons", Icons);
 app.mount("#app");

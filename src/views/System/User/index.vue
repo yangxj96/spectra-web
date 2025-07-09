@@ -123,7 +123,7 @@ import UserApi from "@/api/UserApi.ts";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
 import UseTable from "@/hooks/UseTable.ts";
 import * as VerifyRules from "@/utils/VerifyRules.ts";
-import _, { orderBy } from "lodash";
+import _ from "lodash";
 import PermissionApi from "@/api/PermissionApi.ts";
 
 const formRef = useTemplateRef<FormInstance>("formRef");

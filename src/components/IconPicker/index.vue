@@ -1,6 +1,6 @@
 <template>
     <el-select
-        v-model="selectedIcon"
+        v-model="model"
         popper-class="icon-select"
         :teleported="false"
         filterable
@@ -12,16 +12,17 @@
             </el-tooltip>
         </el-option>
         <template #prefix>
-            <icons v-if="selectedIcon" :name="selectedIcon" class-name="icon-sidebar" />
+            <icons v-if="model !== ''" :name="model" class-name="icon-sidebar" />
         </template>
     </el-select>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import Icons from "@/components/common/Icons.vue";
+<script setup lang="ts">
+import Icons from "@/components/Icons/index.vue";
 
-const icons = ref([
+const model = defineModel<string>("");
+
+const icons = shallowRef([
     "icon-setting-role",
     "icon-module",
     "icon-qq",
@@ -49,8 +50,6 @@ const icons = ref([
     "icon-sun",
     "icon-moon"
 ]);
-
-const selectedIcon = defineModel();
 </script>
 
 <style lang="scss" scoped>

@@ -50,7 +50,7 @@ import { type FormRules, ElForm, ElMessage } from "element-plus";
 import vCode from "@/assets/images/vcode.png";
 
 const router = useRouter();
-const logingRef = useTemplateRef<InstanceType<typeof ElForm>>("loginForm");
+const loginRef = useTemplateRef<InstanceType<typeof ElForm>>("loginForm");
 
 const user = reactive<LongParams>({
     username: "yangxj96@gmail.com",
@@ -66,11 +66,11 @@ const rules = reactive<FormRules<LongParams>>({
 
 async function handleLogin() {
     // 没获取到表单对象
-    if (!logingRef) {
+    if (!loginRef) {
         return;
     }
     // 开始验证
-    await logingRef.value?.validate((valid, fields) => {
+    await loginRef.value?.validate((valid, fields) => {
         if (!valid) {
             ElMessage.error({
                 message: "请检查表单"
