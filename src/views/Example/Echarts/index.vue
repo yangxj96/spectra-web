@@ -1,8 +1,4 @@
-<template>
-    <v-chart :option="option" style="width: 100%; height: 100%" />
-</template>
-
-<script lang="ts" setup>
+<script setup lang="ts">
 import "echarts";
 import VChart from "vue-echarts";
 
@@ -22,3 +18,7 @@ const option = ref({
     ]
 });
 </script>
+
+<template>
+    <v-chart :option="option" style="width: 100%; height: 100%" />
+</template>

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import useAppStore from "@/plugin/store/modules/useAppStore";
 
 const locale = ref(useAppStore().lang);

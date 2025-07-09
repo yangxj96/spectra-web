@@ -1,74 +1,3 @@
-<template>
-    <!-- 搜索区 -->
-    <el-row class="box-search">
-        <el-form :inline="true">
-            <el-form-item label="部门名称" prop="name">
-                <el-input placeholder="请输入部门名称" clearable />
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="handleCriteriaQuery">查询</el-button>
-                <el-button>重置</el-button>
-                <el-button @click="handleMenuAddDialog">新增</el-button>
-            </el-form-item>
-        </el-form>
-    </el-row>
-    <!-- 数据区 -->
-    <el-row class="box-body">
-        <el-table v-if="table_data.length > 0" :data="table_data" height="100%" stripe default-expand-all row-key="id">
-            <el-table-column align="center" type="index" />
-            <el-table-column align="center" prop="name" label="名称" />
-            <el-table-column align="center" prop="type" label="类型">
-                <template #default="scope">
-                    <el-tag>{{ scope.row.type }}</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" prop="code" label="代码" />
-            <el-table-column align="center" prop="sort" label="排序" />
-            <el-table-column align="center" prop="remark" label="说明" show-overflow-tooltip />
-            <el-table-column align="center" label="操作">
-                <template #default="scope">
-                    <el-button link type="primary" size="small" @click="handleTableItemModify(scope.row)">
-                        编辑
-                    </el-button>
-                    <el-button link type="primary" size="small" @click="handleTableItemDelete(scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </el-row>
-    <!-- 新增或编辑 -->
-    <el-dialog
-        v-if="ready"
-        v-model="edit.dialog"
-        :append-to="'.box-content'"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :show-close="false"
-        :destroy-on-close="true"
-        :title="(edit.modify ? '编辑' : '新增') + '部门'"
-        width="30vw">
-        <template #default>
-            <el-form
-                ref="formRef"
-                v-loading="edit.loading"
-                :rules="edit.rules"
-                :model="edit.form"
-                label-width="auto"
-                style="padding: 20px"
-                @submit.prevent>
-                <el-form-item v-if="edit.modify" label="数据ID" prop="id">
-                    <el-input v-model="edit.form.id" disabled clearable placeholder="请输入菜单名称" />
-                </el-form-item>
-            </el-form>
-        </template>
-        <template #footer>
-            <el-button :disabled="edit.loading" @click="() => (edit.dialog = false)">取消</el-button>
-            <el-button :disabled="edit.loading" type="primary" @click="handleMenuSave()">确定</el-button>
-        </template>
-    </el-dialog>
-</template>
-
 <script setup lang="ts">
 import { onMounted, reactive, ref, useTemplateRef } from "vue";
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus";
@@ -150,6 +79,77 @@ function handleMenuAddDialog() {
 // 新增或编辑
 async function handleMenuSave() {}
 </script>
+
+<template>
+    <!-- 搜索区 -->
+    <el-row class="box-search">
+        <el-form :inline="true">
+            <el-form-item label="部门名称" prop="name">
+                <el-input placeholder="请输入部门名称" clearable />
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="handleCriteriaQuery">查询</el-button>
+                <el-button>重置</el-button>
+                <el-button @click="handleMenuAddDialog">新增</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <!-- 数据区 -->
+    <el-row class="box-body">
+        <el-table v-if="table_data.length > 0" :data="table_data" height="100%" stripe default-expand-all row-key="id">
+            <el-table-column align="center" type="index" />
+            <el-table-column align="center" prop="name" label="名称" />
+            <el-table-column align="center" prop="type" label="类型">
+                <template #default="scope">
+                    <el-tag>{{ scope.row.type }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column align="center" prop="code" label="代码" />
+            <el-table-column align="center" prop="sort" label="排序" />
+            <el-table-column align="center" prop="remark" label="说明" show-overflow-tooltip />
+            <el-table-column align="center" label="操作">
+                <template #default="scope">
+                    <el-button link type="primary" size="small" @click="handleTableItemModify(scope.row)">
+                        编辑
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="handleTableItemDelete(scope.row)">
+                        删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-row>
+    <!-- 新增或编辑 -->
+    <el-dialog
+        v-if="ready"
+        v-model="edit.dialog"
+        :append-to="'.box-content'"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :show-close="false"
+        :destroy-on-close="true"
+        :title="(edit.modify ? '编辑' : '新增') + '部门'"
+        width="30vw">
+        <template #default>
+            <el-form
+                ref="formRef"
+                v-loading="edit.loading"
+                :rules="edit.rules"
+                :model="edit.form"
+                label-width="auto"
+                style="padding: 20px"
+                @submit.prevent>
+                <el-form-item v-if="edit.modify" label="数据ID" prop="id">
+                    <el-input v-model="edit.form.id" disabled clearable placeholder="请输入菜单名称" />
+                </el-form-item>
+            </el-form>
+        </template>
+        <template #footer>
+            <el-button :disabled="edit.loading" @click="() => (edit.dialog = false)">取消</el-button>
+            <el-button :disabled="edit.loading" type="primary" @click="handleMenuSave()">确定</el-button>
+        </template>
+    </el-dialog>
+</template>
 
 <style scoped lang="scss">
 .box-search {

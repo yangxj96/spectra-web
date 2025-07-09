@@ -1,7 +1,3 @@
-<template>
-    <div ref="editor"></div>
-</template>
-
 <script setup lang="ts">
 import { onMounted, useTemplateRef, watch } from "vue";
 import JSONEditor from "jsoneditor";
@@ -74,3 +70,7 @@ watch(
     }
 );
 </script>
+
+<template>
+    <div ref="editor"></div>
+</template>

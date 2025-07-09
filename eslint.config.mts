@@ -71,17 +71,23 @@ export default [
                 parser: parserTypescript
             }
         },
-        plugins: {
-            unicorn: pluginUnicorn,
-            vue: pluginVue,
-            "@typescript-eslint": pluginTypescript
-        },
         rules: {
             ...pluginUnicorn.configs.recommended.rules,
             ...pluginVue.configs.recommended.rules,
             ...pluginTypescript.configs.recommended.rules,
             ...sharedRules,
-            "vue/no-v-html": "error"
+            "vue/no-v-html": "error",
+            "vue/block-order": [
+                "error",
+                {
+                    order: ["script", "template", "style"]
+                }
+            ]
+        },
+        plugins: {
+            unicorn: pluginUnicorn,
+            vue: pluginVue,
+            "@typescript-eslint": pluginTypescript
         }
     },
     pluginPrettierRecommended

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import DictApi from "@/api/DictApi";
 import { ElMessage, type FormInstance } from "element-plus";
 import { reactive } from "vue";

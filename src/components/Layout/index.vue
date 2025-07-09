@@ -1,3 +1,50 @@
+<script setup lang="ts">
+import { type RouteLocationMatched } from "vue-router";
+import useAppStore from "@/plugin/store/modules/useAppStore.ts";
+import { useDark, useFullscreen, useToggle } from "@vueuse/core";
+
+const appStore = useAppStore();
+const router = useRouter();
+const context = useTemplateRef<HTMLElement>("content");
+
+// 面包屑
+const breadcrumb = ref<RouteLocationMatched[]>([]);
+const { toggle } = useFullscreen(context);
+const theme = ref(useDark());
+
+onMounted(() => {
+    handlerRouter();
+
+    watch(
+        () => router.currentRoute.value.matched,
+        value => {
+            handlerRouter([...value]);
+        },
+        {
+            immediate: true,
+            deep: true
+        }
+    );
+});
+
+// 深色模式切换
+function handleDarkSwitch(val: boolean) {
+    theme.value = val;
+    useToggle(theme);
+}
+
+function handlerRouter(r: RouteLocationMatched[] = []) {
+    if (r.length <= 0) {
+        r = [...router.currentRoute.value.matched];
+    }
+    breadcrumb.value = r;
+}
+
+function handleMenu() {
+    appStore.unfold = !appStore.unfold;
+}
+</script>
+
 <template>
     <el-container class="box">
         <el-header class="box-header">
@@ -67,53 +114,6 @@
         </el-container>
     </el-container>
 </template>
-
-<script lang="ts" setup>
-import { type RouteLocationMatched } from "vue-router";
-import useAppStore from "@/plugin/store/modules/useAppStore.ts";
-import { useDark, useFullscreen, useToggle } from "@vueuse/core";
-
-const appStore = useAppStore();
-const router = useRouter();
-const context = useTemplateRef<HTMLElement>("content");
-
-// 面包屑
-const breadcrumb = ref<RouteLocationMatched[]>([]);
-const { toggle } = useFullscreen(context);
-const theme = ref(useDark());
-
-onMounted(() => {
-    handlerRouter();
-
-    watch(
-        () => router.currentRoute.value.matched,
-        value => {
-            handlerRouter([...value]);
-        },
-        {
-            immediate: true,
-            deep: true
-        }
-    );
-});
-
-// 深色模式切换
-function handleDarkSwitch(val: boolean) {
-    theme.value = val;
-    useToggle(theme);
-}
-
-function handlerRouter(r: RouteLocationMatched[] = []) {
-    if (r.length <= 0) {
-        r = [...router.currentRoute.value.matched];
-    }
-    breadcrumb.value = r;
-}
-
-function handleMenu() {
-    appStore.unfold = !appStore.unfold;
-}
-</script>
 
 <style scoped lang="scss">
 ::v-deep(.el-aside) {

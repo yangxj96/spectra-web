@@ -1,122 +1,3 @@
-<template>
-    <!-- 搜索区 -->
-    <el-row class="box-search">
-        <el-form :inline="true" :model="condition">
-            <el-form-item label="姓名" prop="username">
-                <el-input v-model="condition.username" placeholder="请输入姓名" clearable />
-            </el-form-item>
-            <el-form-item label="电话" prop="telephone">
-                <el-input v-model="condition.telephone" placeholder="请输入电话" clearable />
-            </el-form-item>
-            <el-form-item id="form-status" label="状态" prop="status">
-                <el-select
-                    v-if="ready"
-                    v-model="condition.status"
-                    :append-to="'#form-status'"
-                    placeholder="请输入状态"
-                    clearable
-                    style="width: 200px">
-                    <el-option label="激活" :value="true" />
-                    <el-option label="冻结" :value="false" />
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="handlerConditionQuery">查询</el-button>
-                <el-button>重置</el-button>
-                <el-button @click="handleUserAddDialog">新增用户</el-button>
-            </el-form-item>
-        </el-form>
-    </el-row>
-    <!-- 数据区 -->
-    <el-row class="box-body">
-        <!-- 列表 -->
-        <el-table :data="table_data" height="90%" stripe @sort-change="handleTableSortChange">
-            <el-table-column align="center" type="index" />
-            <el-table-column align="center" :sortable="true" label="姓名" prop="name" />
-            <el-table-column align="center" :sortable="true" label="邮箱" prop="email" />
-            <el-table-column align="center" :sortable="true" label="状态" prop="state">
-                <template #default="scope">
-                    <dict-tag v-model="scope.row.state" primary_value="0" dict_code="sys_user_state" />
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="角色" prop="roles">
-                <template #default="scope">
-                    <el-tag v-for="(item, idx) in scope.row.roles" :index="idx" style="margin-right: 4px">
-                        {{ item.name }}
-                    </el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="操作">
-                <template v-slot:default="scope">
-                    <el-button link type="primary" size="small" @click="handleTableItemModify(scope.row)">
-                        编辑
-                    </el-button>
-                    <el-button link type="primary" size="small" @click="handleTableItemDelete(scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-            background
-            hide-on-single-page
-            layout="total, sizes, prev, pager, next"
-            :default-page-size="pagination.default_page_size"
-            :page-sizes="pagination.page_sizes"
-            :total="pagination.total"
-            style="padding: 10px; float: right"
-            @sizeChange="handleSizeChange"
-            @currentChange="handleCurrentChange" />
-    </el-row>
-    <!-- 新增或编辑 -->
-    <el-dialog
-        v-if="ready"
-        v-model="edit.dialog"
-        :append-to="'.box-content'"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :show-close="false"
-        :destroy-on-close="true"
-        :title="(edit.modify ? '编辑' : '新增') + '用户'"
-        width="30vw">
-        <template #default>
-            <el-form
-                ref="formRef"
-                v-loading="edit.loading"
-                :model="edit.form"
-                :rules="edit.rules"
-                label-width="auto"
-                @submit.prevent>
-                <el-form-item label="姓名" prop="name">
-                    <el-input v-model="edit.form.name" placeholder="请输入姓名" />
-                </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="edit.form.email" placeholder="请输入邮箱">
-                        <template #suffix>
-                            <el-tooltip effect="dark" content="同时也作为登录账号" placement="right">
-                                <icons name="icon-hint" style="margin-left: 10px; width: 1.4em; height: 1.4em" />
-                            </el-tooltip>
-                        </template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="状态" prop="state">
-                    <dict-select v-model="edit.form.state" dict_code="sys_user_state" placeholder="请选择状态" />
-                </el-form-item>
-                <el-form-item label="角色" prop="role_ids">
-                    <el-select v-model="edit.form.role_ids" value-key="id" multiple placeholder="请选择角色" clearable>
-                        <el-option v-for="item in edit.roles" :key="item.id" :label="item.name" :value="item.id" />
-                    </el-select>
-                </el-form-item>
-            </el-form>
-        </template>
-        <template #footer>
-            <el-button :disabled="edit.loading" @click="() => (edit.dialog = false)">取消</el-button>
-            <el-button :disabled="edit.loading" type="primary" @click="handleUserSave">确定</el-button>
-        </template>
-    </el-dialog>
-</template>
-
 <script setup lang="ts">
 import { onMounted, reactive, ref, useTemplateRef } from "vue";
 import UserApi from "@/api/UserApi.ts";
@@ -243,6 +124,125 @@ function handleTableSortChange(data: { column: User; prop: string; order: string
     handlerConditionQuery();
 }
 </script>
+
+<template>
+    <!-- 搜索区 -->
+    <el-row class="box-search">
+        <el-form :inline="true" :model="condition">
+            <el-form-item label="姓名" prop="username">
+                <el-input v-model="condition.username" placeholder="请输入姓名" clearable />
+            </el-form-item>
+            <el-form-item label="电话" prop="telephone">
+                <el-input v-model="condition.telephone" placeholder="请输入电话" clearable />
+            </el-form-item>
+            <el-form-item id="form-status" label="状态" prop="status">
+                <el-select
+                    v-if="ready"
+                    v-model="condition.status"
+                    :append-to="'#form-status'"
+                    placeholder="请输入状态"
+                    clearable
+                    style="width: 200px">
+                    <el-option label="激活" :value="true" />
+                    <el-option label="冻结" :value="false" />
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="handlerConditionQuery">查询</el-button>
+                <el-button>重置</el-button>
+                <el-button @click="handleUserAddDialog">新增用户</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <!-- 数据区 -->
+    <el-row class="box-body">
+        <!-- 列表 -->
+        <el-table :data="table_data" height="90%" stripe @sort-change="handleTableSortChange">
+            <el-table-column align="center" type="index" />
+            <el-table-column align="center" :sortable="true" label="姓名" prop="name" />
+            <el-table-column align="center" :sortable="true" label="邮箱" prop="email" />
+            <el-table-column align="center" :sortable="true" label="状态" prop="state">
+                <template #default="scope">
+                    <dict-tag v-model="scope.row.state" primary_value="0" dict_code="sys_user_state" />
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="角色" prop="roles">
+                <template #default="scope">
+                    <el-tag v-for="(item, idx) in scope.row.roles" :index="idx" style="margin-right: 4px">
+                        {{ item.name }}
+                    </el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="操作">
+                <template #default="scope">
+                    <el-button link type="primary" size="small" @click="handleTableItemModify(scope.row)">
+                        编辑
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="handleTableItemDelete(scope.row)">
+                        删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+            background
+            hide-on-single-page
+            layout="total, sizes, prev, pager, next"
+            :default-page-size="pagination.default_page_size"
+            :page-sizes="pagination.page_sizes"
+            :total="pagination.total"
+            style="padding: 10px; float: right"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange" />
+    </el-row>
+    <!-- 新增或编辑 -->
+    <el-dialog
+        v-if="ready"
+        v-model="edit.dialog"
+        :append-to="'.box-content'"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :show-close="false"
+        :destroy-on-close="true"
+        :title="(edit.modify ? '编辑' : '新增') + '用户'"
+        width="30vw">
+        <template #default>
+            <el-form
+                ref="formRef"
+                v-loading="edit.loading"
+                :model="edit.form"
+                :rules="edit.rules"
+                label-width="auto"
+                @submit.prevent>
+                <el-form-item label="姓名" prop="name">
+                    <el-input v-model="edit.form.name" placeholder="请输入姓名" />
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="edit.form.email" placeholder="请输入邮箱">
+                        <template #suffix>
+                            <el-tooltip effect="dark" content="同时也作为登录账号" placement="right">
+                                <icons name="icon-hint" style="margin-left: 10px; width: 1.4em; height: 1.4em" />
+                            </el-tooltip>
+                        </template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="状态" prop="state">
+                    <dict-select v-model="edit.form.state" dict_code="sys_user_state" placeholder="请选择状态" />
+                </el-form-item>
+                <el-form-item label="角色" prop="role_ids">
+                    <el-select v-model="edit.form.role_ids" value-key="id" multiple placeholder="请选择角色" clearable>
+                        <el-option v-for="item in edit.roles" :key="item.id" :label="item.name" :value="item.id" />
+                    </el-select>
+                </el-form-item>
+            </el-form>
+        </template>
+        <template #footer>
+            <el-button :disabled="edit.loading" @click="() => (edit.dialog = false)">取消</el-button>
+            <el-button :disabled="edit.loading" type="primary" @click="handleUserSave">确定</el-button>
+        </template>
+    </el-dialog>
+</template>
 
 <style scoped lang="scss">
 .box-search {

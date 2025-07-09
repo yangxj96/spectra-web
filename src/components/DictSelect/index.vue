@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ElMessage } from "element-plus";
 import UseDictStore from "@/plugin/store/modules/useDictStore";

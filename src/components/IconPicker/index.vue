@@ -1,26 +1,10 @@
-<template>
-    <el-select
-        v-model="model"
-        popper-class="icon-select"
-        :teleported="false"
-        filterable
-        placeholder="请选择图标"
-        clearable>
-        <el-option v-for="(icon, index) in icons" :key="index" :label="icon" :value="icon">
-            <el-tooltip :content="icon">
-                <icons :name="icon" class-name="icon-sidebar" />
-            </el-tooltip>
-        </el-option>
-        <template #prefix>
-            <icons v-if="model !== ''" :name="model" class-name="icon-sidebar" />
-        </template>
-    </el-select>
-</template>
-
 <script setup lang="ts">
 import Icons from "@/components/Icons/index.vue";
 
-const model = defineModel<string>("");
+const model = defineModel<string>();
+
+// 包装成一个非空 Ref<string>
+const safeModel = computed(() => model.value ?? "");
 
 const icons = shallowRef([
     "icon-setting-role",
@@ -52,7 +36,26 @@ const icons = shallowRef([
 ]);
 </script>
 
-<style lang="scss" scoped>
+<template>
+    <el-select
+        v-model="model"
+        popper-class="icon-select"
+        :teleported="false"
+        filterable
+        placeholder="请选择图标"
+        clearable>
+        <el-option v-for="(icon, index) in icons" :key="index" :label="icon" :value="icon">
+            <el-tooltip :content="icon">
+                <icons :name="icon" class-name="icon-sidebar" />
+            </el-tooltip>
+        </el-option>
+        <template #prefix>
+            <icons v-if="safeModel !== ''" :name="safeModel" class-name="icon-sidebar" />
+        </template>
+    </el-select>
+</template>
+
+<style scoped lang="scss">
 .icon-sidebar {
     width: 1.4em;
     height: 1.4em;

@@ -1,3 +1,39 @@
+<script setup lang="ts">
+import AuthApi from "@/api/AuthApi.ts";
+import GlobalUtils from "@/utils/GlobalUtils";
+import { ElMessage } from "element-plus/es";
+import useStore from "@/plugin/store";
+import { stopAllRequest } from "@/plugin/request";
+import logo from "@/assets/images/logo.svg";
+import avatar from "@/assets/images/avatar.png";
+
+const router = useRouter();
+
+function gotoHome() {
+    router.push({ path: "/" });
+}
+
+function handleUserLogout() {
+    stopAllRequest();
+    AuthApi.logout().then(() => {
+        ElMessage.success({
+            message: "退出成功",
+            onClose: () => {
+                GlobalUtils.exit();
+            }
+        });
+    });
+}
+
+function handleModifyPasswordPopup() {
+    useStore().props.change_password = true;
+}
+
+function handlePersonalPopup() {
+    useStore().props.personal_details = true;
+}
+</script>
+
 <template>
     <el-row style="height: 60px">
         <el-col :span="3">
@@ -35,42 +71,6 @@
     <personal-details />
     <change-password />
 </template>
-
-<script lang="ts" setup>
-import AuthApi from "@/api/AuthApi.ts";
-import GlobalUtils from "@/utils/GlobalUtils";
-import { ElMessage } from "element-plus/es";
-import useStore from "@/plugin/store";
-import { stopAllRequest } from "@/plugin/request";
-import logo from "@/assets/images/logo.svg";
-import avatar from "@/assets/images/avatar.png";
-
-const router = useRouter();
-
-function gotoHome() {
-    router.push({ path: "/" });
-}
-
-function handleUserLogout() {
-    stopAllRequest();
-    AuthApi.logout().then(() => {
-        ElMessage.success({
-            message: "退出成功",
-            onClose: () => {
-                GlobalUtils.exit();
-            }
-        });
-    });
-}
-
-function handleModifyPasswordPopup() {
-    useStore().props.change_password = true;
-}
-
-function handlePersonalPopup() {
-    useStore().props.personal_details = true;
-}
-</script>
 
 <style scoped lang="scss">
 .goto-home {

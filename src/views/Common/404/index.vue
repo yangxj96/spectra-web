@@ -1,12 +1,4 @@
-<template>
-    <el-result icon="error" title="404" :sub-title="`对不起,找不到页面,${second}秒后自动后退`">
-        <template #extra>
-            <el-button type="primary" @click="handleBack">后退</el-button>
-        </template>
-    </el-result>
-</template>
-
-<script lang="ts" setup>
+<script setup lang="ts">
 const router = useRouter();
 
 const time = ref<number>(-1);
@@ -32,3 +24,11 @@ function handleBack() {
     router.back();
 }
 </script>
+
+<template>
+    <el-result icon="error" title="404" :sub-title="`对不起,找不到页面,${second}秒后自动后退`">
+        <template #extra>
+            <el-button type="primary" @click="handleBack">后退</el-button>
+        </template>
+    </el-result>
+</template>

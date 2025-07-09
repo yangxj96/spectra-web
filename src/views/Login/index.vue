@@ -1,49 +1,4 @@
-<template>
-    <div class="box">
-        <el-dialog
-            :model-value="true"
-            :close-on-click-modal="false"
-            :close-on-press-escape="false"
-            :show-close="false"
-            class="dialog-login"
-            width="20%">
-            <template #header>
-                <p>
-                    <icons name="icon-login" style="color: #9b9b9b" />
-                    用户登录
-                </p>
-            </template>
-            <div>
-                <el-form ref="loginForm" label-width="70px" :model="user" :rules="rules">
-                    <el-form-item label="账号" prop="username">
-                        <el-input v-model="user.username" placeholder="请输入账号" />
-                    </el-form-item>
-                    <el-form-item label="密码" prop="password">
-                        <el-input v-model="user.password" placeholder="请输入密码" show-password />
-                    </el-form-item>
-                    <el-form-item label="验证码" prop="code">
-                        <el-row style="width: 100%">
-                            <el-col :span="12">
-                                <el-input v-model="user.code" placeholder="请输入验证码" />
-                            </el-col>
-                            <el-col :span="12">
-                                <el-image :src="vCode" class="v-code" />
-                            </el-col>
-                        </el-row>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <template #footer>
-                <el-button type="primary" @click="handleLogin">
-                    <icons name="icon-login" />
-                    <span>&nbsp;登录</span>
-                </el-button>
-            </template>
-        </el-dialog>
-    </div>
-</template>
-
-<script lang="ts" setup>
+<script setup lang="ts">
 import AuthApi from "@/api/AuthApi.ts";
 import useUserStore from "@/plugin/store/modules/useUserStore";
 import { type FormRules, ElForm, ElMessage } from "element-plus";
@@ -100,6 +55,51 @@ interface LongParams {
     code: string;
 }
 </script>
+
+<template>
+    <div class="box">
+        <el-dialog
+            :model-value="true"
+            :close-on-click-modal="false"
+            :close-on-press-escape="false"
+            :show-close="false"
+            class="dialog-login"
+            width="20%">
+            <template #header>
+                <p>
+                    <icons name="icon-login" style="color: #9b9b9b" />
+                    用户登录
+                </p>
+            </template>
+            <div>
+                <el-form ref="loginForm" label-width="70px" :model="user" :rules="rules">
+                    <el-form-item label="账号" prop="username">
+                        <el-input v-model="user.username" placeholder="请输入账号" />
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input v-model="user.password" placeholder="请输入密码" show-password />
+                    </el-form-item>
+                    <el-form-item label="验证码" prop="code">
+                        <el-row style="width: 100%">
+                            <el-col :span="12">
+                                <el-input v-model="user.code" placeholder="请输入验证码" />
+                            </el-col>
+                            <el-col :span="12">
+                                <el-image :src="vCode" class="v-code" />
+                            </el-col>
+                        </el-row>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <template #footer>
+                <el-button type="primary" @click="handleLogin">
+                    <icons name="icon-login" />
+                    <span>&nbsp;登录</span>
+                </el-button>
+            </template>
+        </el-dialog>
+    </div>
+</template>
 
 <style scoped lang="scss">
 .box {

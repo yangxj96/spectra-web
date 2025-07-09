@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { stopAllRequest } from "@/plugin/request";
+import useAppStore from "@/plugin/store/modules/useAppStore.ts";
+
+const route = useRoute();
+const unfold = ref(true);
+const menus = ref([] as Menu[]);
+
+// 监听
+useAppStore().$subscribe((_, state) => {
+    unfold.value = state.unfold;
+    menus.value = state.menus;
+});
+
+onMounted(() => {
+    unfold.value = useAppStore().unfold;
+    menus.value = useAppStore().menus;
+});
+
+function onMenuItemClick() {
+    stopAllRequest();
+}
+</script>
+
 <template>
     <el-menu
         class="box-menu"
@@ -24,30 +48,6 @@
         </el-sub-menu>
     </el-menu>
 </template>
-
-<script lang="ts" setup>
-import { stopAllRequest } from "@/plugin/request";
-import useAppStore from "@/plugin/store/modules/useAppStore.ts";
-
-const route = useRoute();
-const unfold = ref(true);
-const menus = ref([] as Menu[]);
-
-// 监听
-useAppStore().$subscribe((_, state) => {
-    unfold.value = state.unfold;
-    menus.value = state.menus;
-});
-
-onMounted(() => {
-    unfold.value = useAppStore().unfold;
-    menus.value = useAppStore().menus;
-});
-
-function onMenuItemClick() {
-    stopAllRequest();
-}
-</script>
 
 <style scoped lang="scss">
 .box-menu {

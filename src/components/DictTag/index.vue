@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import useDictStore from "@/plugin/store/modules/useDictStore";
 

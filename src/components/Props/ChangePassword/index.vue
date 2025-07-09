@@ -1,3 +1,37 @@
+<script lang="ts">
+import { defineComponent } from "vue";
+import usePropsStore from "@/plugin/store/modules/usePropsStore";
+
+export default defineComponent({
+    name: "PropsChangePassword",
+    data() {
+        return {
+            isShow: usePropsStore().change_password,
+            form: {
+                old_password: "",
+                new_password: "",
+                verify_password: ""
+            },
+            rules: {
+                old_password: [{ required: true, message: "请输入旧密码", trigger: "blur" }],
+                new_password: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+                verify_password: [{ required: true, message: "请重复输入新密码", trigger: "blur" }]
+            }
+        };
+    },
+    created() {
+        usePropsStore().$subscribe((_, state) => {
+            this.isShow = state.change_password;
+        });
+    },
+    methods: {
+        handlePropsCancel() {
+            usePropsStore().change_password = false;
+        }
+    }
+});
+</script>
+
 <template>
     <el-dialog
         v-model="isShow"
@@ -38,37 +72,3 @@
         </template>
     </el-dialog>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import usePropsStore from "@/plugin/store/modules/usePropsStore";
-
-export default defineComponent({
-    name: "PropsChangePassword",
-    data() {
-        return {
-            isShow: usePropsStore().change_password,
-            form: {
-                old_password: "",
-                new_password: "",
-                verify_password: ""
-            },
-            rules: {
-                old_password: [{ required: true, message: "请输入旧密码", trigger: "blur" }],
-                new_password: [{ required: true, message: "请输入新密码", trigger: "blur" }],
-                verify_password: [{ required: true, message: "请重复输入新密码", trigger: "blur" }]
-            }
-        };
-    },
-    created() {
-        usePropsStore().$subscribe((_, state) => {
-            this.isShow = state.change_password;
-        });
-    },
-    methods: {
-        handlePropsCancel() {
-            usePropsStore().change_password = false;
-        }
-    }
-});
-</script>
