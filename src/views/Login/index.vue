@@ -27,15 +27,7 @@
                                 <el-input v-model="user.code" placeholder="请输入验证码" />
                             </el-col>
                             <el-col :span="12">
-                                <el-image :src="vCode" class="v-code">
-                                    <template #error>
-                                        <div class="image-slot">
-                                            <el-icon>
-                                                <icon-picture />
-                                            </el-icon>
-                                        </div>
-                                    </template>
-                                </el-image>
+                                <el-image :src="vCode" class="v-code" />
                             </el-col>
                         </el-row>
                     </el-form-item>

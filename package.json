@@ -29,6 +29,7 @@
         "follow-redirects": "1.15.9",
         "jsoneditor": "10.2.0",
         "lodash": "4.17.21",
+        "p-queue": "8.1.0",
         "pinia": "3.0.3",
         "pinia-plugin-persistedstate": "4.4.1",
         "prismjs": "1.30.0",

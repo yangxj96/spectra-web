@@ -36,7 +36,7 @@
             <el-table-column align="center" :sortable="true" label="邮箱" prop="email" />
             <el-table-column align="center" :sortable="true" label="状态" prop="state">
                 <template #default="scope">
-                    <el-tag :type="scope.row.state === '正常' ? 'primary' : 'warning'">{{ scope.row.state }}</el-tag>
+                    <dict-tag v-model="scope.row.state" primary_value="0" dict_code="sys_user_state" />
                 </template>
             </el-table-column>
             <el-table-column align="center" label="角色" prop="roles">
@@ -101,10 +101,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="state">
-                    <el-select v-model="edit.form.state" placeholder="请选择状态" clearable>
-                        <el-option label="正常" value="正常" />
-                        <el-option label="冻结" value="冻结" />
-                    </el-select>
+                    <dict-select v-model="edit.form.state" dict_code="sys_user_state" placeholder="请选择状态" />
                 </el-form-item>
                 <el-form-item label="角色" prop="role_ids">
                     <el-select v-model="edit.form.role_ids" value-key="id" multiple placeholder="请选择角色" clearable>
@@ -210,7 +207,7 @@ function handleTableItemDelete(row: User) {
 // 用户新增被单机
 function handleUserAddDialog() {
     edit.modify = false;
-    edit.form = {} as User;
+    edit.form = { state: 0 } as User;
     edit.dialog = true;
 }
 

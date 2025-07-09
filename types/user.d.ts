@@ -15,7 +15,7 @@ type Token = {
 type User = BaseEntity & {
     name: string;
     email: string;
-    state: boolean;
+    state: number;
     roles: Role[];
     role_ids: string[];
 };

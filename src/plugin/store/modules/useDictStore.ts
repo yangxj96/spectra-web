@@ -1,5 +1,9 @@
 import DictApi from "@/api/DictApi";
 import { defineStore } from "pinia";
+import PQueue from "p-queue";
+
+// 创建一个串行队列（concurrency=1）
+const serialQueue = new PQueue({ concurrency: 1 });
 
 interface StoreDict {
     dicts: Record<string, DictData[]>;
@@ -10,22 +14,25 @@ const useDictStore = defineStore("dict", {
         dicts: {}
     }),
     actions: {
-        async getDictData(dictCode: string) {
-            if (this.dicts[dictCode]) {
-                return this.dicts[dictCode];
-            }
-            try {
-                const { code, data, msg } = await DictApi.getDataByTypeCode(dictCode);
-                if (code === 200) {
-                    this.dicts[dictCode] = data!;
-                    return this.dicts[dictCode];
+        async getDictData(key: string): Promise<void | DictData[]> {
+            return serialQueue.add(async () => {
+                if (this.dicts[key]) {
+                    return this.dicts[key];
                 }
-                console.error(`获取字典数据失败: ${dictCode}`, msg);
-                throw new Error(`获取字典数据失败: ${msg}`);
-            } catch (error) {
-                console.error(`获取字典数据失败: ${dictCode}`, error);
-                throw new Error(`获取字典数据失败: ${error}`);
-            }
+                try {
+                    const { code, data } = await DictApi.getDataByTypeCode(key);
+                    if (code === 200) {
+                        this.dicts[key] = data ?? [];
+                        return this.dicts[key];
+                    } else {
+                        console.log(`获取字典失败,${key}`);
+                        return [];
+                    }
+                } catch (error) {
+                    console.log("发生异常", error);
+                    return [];
+                }
+            });
         }
     },
     persist: true

@@ -153,10 +153,7 @@ initData();
                     <el-table-column align="center" label="排序" prop="sort" />
                     <el-table-column align="center" label="状态" prop="state">
                         <template #default="scope">
-                            <dict-tag
-                                :dict_value="scope.row.state"
-                                :primary_value="0"
-                                :dict_code="'sys_common_state'" />
+                            <dict-tag v-model="scope.row.state" primary_value="0" dict_code="sys_common_state" />
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="备注" prop="remark" :show-overflow-tooltip="true" />
