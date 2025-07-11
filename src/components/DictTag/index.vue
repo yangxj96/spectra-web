@@ -4,7 +4,11 @@ import useDictStore from "@/plugin/store/modules/useDictStore";
 
 const props = defineProps<{
     modelValue: string | number;
-    primary_value: string | number;
+    /**
+     * 主键值,如果没设置的所有渲染的tag都是 type="primary"
+     * 否则,设置的值为primary,其余的都会是danger
+     */
+    primary_value?: string | number;
     dict_code: string;
 }>();
 
@@ -39,6 +43,7 @@ const loadDictData = async () => {
     dict_data.value = undefined;
 };
 
+// 本地值,使用实时计算的,获取的值为v-model的值
 const localValue = computed({
     get() {
         return String(props.modelValue) || "";
@@ -50,11 +55,25 @@ const localValue = computed({
 });
 
 // 计算显示的 label 或 "未知"
-const displayLabel = computed(() => {
+const display_label = computed(() => {
     if (dict_data.value && dict_data.value.label) {
         return dict_data.value.label;
     }
     return "未知";
+});
+
+// 计算tagType
+const tag_type = computed(() => {
+    if (!props.primary_value) {
+        console.log(`没有设置主类型值`);
+        return "primary";
+    }
+    console.log(`主类型值:`, props.primary_value);
+    console.log(`dict_data:`, dict_data);
+    if (dict_data.value) {
+        return dict_data.value.value === String(props.primary_value) ? "primary" : "danger";
+    }
+    return "warning";
 });
 
 // 初次挂载时加载数据
@@ -74,8 +93,8 @@ watch(
 
 <template>
     <div>
-        <el-tag v-if="dict_data" :type="dict_data.value === String(props.primary_value) ? 'primary' : 'danger'">
-            {{ displayLabel }}
+        <el-tag v-if="dict_data" :type="tag_type">
+            {{ display_label }}
         </el-tag>
     </div>
 </template>

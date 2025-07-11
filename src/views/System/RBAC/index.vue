@@ -24,6 +24,8 @@ const tree_props = {
 
 const tree_data = ref<Menu[]>();
 
+const authority_tree = ref<AuthorityTree[]>();
+
 const edit = reactive({
     dialog: false,
     modify: false,
@@ -44,7 +46,11 @@ onMounted(() => {
 
 // 初始化数据
 function handleInitData() {
-    MenuApi.tree().then(res => (tree_data.value = res.data));
+    let requests = [MenuApi.tree(), PermissionApi.authorityTree()];
+    Promise.all(requests).then(([menuRes, authorityTreeRes]) => {
+        tree_data.value = menuRes.data as Menu[];
+        authority_tree.value = authorityTreeRes.data as AuthorityTree[];
+    });
 }
 
 // 角色新增打开
@@ -149,7 +155,7 @@ function handleRoleTableRowClick(row: Role, column: unknown, event: Event) {
                 <el-table-column align="center" prop="name" width="220" label="名称" />
                 <el-table-column align="center" width="220" label="范围">
                     <template #default="scope">
-                        <el-tag type="primary">{{ scope.row.scope }}</el-tag>
+                        <dict-tag v-model="scope.row.scope" dict_code="sys_power_scope" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" width="220" label="状态">
@@ -189,7 +195,7 @@ function handleRoleTableRowClick(row: Role, column: unknown, event: Event) {
             <el-divider />
             <el-tree
                 ref="powerRef"
-                :data="tree_data"
+                :data="authority_tree"
                 :props="tree_props"
                 default-expand-all
                 empty-text="暂无权限"

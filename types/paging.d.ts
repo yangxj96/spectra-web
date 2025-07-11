@@ -1,6 +1,4 @@
-/**
- * 分页实体
- */
+// 分页实体
 type Page<T = never> = {
     current: number;
     optimize_count_sql: boolean;
@@ -12,9 +10,7 @@ type Page<T = never> = {
     total: number;
 };
 
-/**
- * 分页参数实体
- */
+// 分页参数实体
 type Pagination = {
     size: number;
     page: number;
@@ -23,50 +19,29 @@ type Pagination = {
     total: number;
 };
 
-/**
- * 基础分页请求参数
- */
+// 基础分页请求参数
 type BasePageParams = {
     page_size: number;
     page_num: number;
     orders?: OrderItem[];
 };
 
-/**
- * 排序字段
- */
+// 排序字段
 type OrderItem = {
     column: string;
     asc: boolean;
 };
 
-/**
- * 用户分页请求参数定义
- */
+//////////////////////////////// 各个部分的分页参数
+
+// 用户分页请求参数定义
 type UserPageParams = BasePageParams & {
     username?: string;
     telephone?: string;
     status?: string;
 };
 
-/**
- * 菜单分页请求参数定义
- */
-type MenuPageParams = BasePageParams & {
-    name?: string;
-};
-
-/**
- * 路由分页请求参数定义
- */
-type RoutePageParams = BasePageParams & {
-    uri?: string;
-    route_id?: string;
-};
-
-/**
- * 角色分页请求参数定义
- */
+// 角色分页请求参数定义
 type RolePageParams = BasePageParams & {
     /** 角色名称 **/
     name?: string;

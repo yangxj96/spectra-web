@@ -16,25 +16,24 @@ const http = axios.create({
     headers: {
         "Content-Type": "application/json"
     },
-    paramsSerializer: paramsSerializer
+    /**
+     * 自定义 paramsSerializer，用于 axios 请求参数的序列化，支持嵌套对象和数组。
+     * @param params - 请求参数对象（支持嵌套对象和数组）
+     * @returns 序列化后的查询字符串
+     */
+    paramsSerializer: (params: Record<string, unknown>): string => {
+        // 使用 qs.stringify 处理嵌套对象和数组
+        return qs.stringify(params, {
+            // 支持数组格式化，默认为 brackets 格式
+            arrayFormat: "indices",
+            // 是否使用点符号表示嵌套对象，默认为 false
+            allowDots: true,
+            encoder: (str: string) => {
+                return encodeURIComponent(str);
+            }
+        });
+    }
 });
-
-/**
- * 自定义 paramsSerializer，用于 axios 请求参数的序列化，支持嵌套对象和数组。
- * @param params - 请求参数对象（支持嵌套对象和数组）
- * @returns 序列化后的查询字符串
- */
-function paramsSerializer(params: Record<string, unknown>): string {
-    // 使用 qs.stringify 处理嵌套对象和数组
-    let res = qs.stringify(params, {
-        arrayFormat: "indices", // 支持数组格式化，默认为 brackets 格式
-        allowDots: true, // 是否使用点符号表示嵌套对象，默认为 false
-        encoder: (str: string) => {
-            return encodeURIComponent(str);
-        }
-    });
-    return res;
-}
 
 export const clean: Canceler[] = [];
 
