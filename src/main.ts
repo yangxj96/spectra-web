@@ -13,6 +13,8 @@ if (navigationEntry?.type === "reload") {
     sessionStorage.setItem("reloaded", "true");
 }
 
+// 主分支提交,测试变基
+
 // 创建APP
 const app = createApp(App);
 loadPlugins(app);
