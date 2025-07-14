@@ -118,6 +118,7 @@ function handleSaveDictGroup() {
                     <el-tree-select
                         v-model="edit.form.gid"
                         default-expand-all
+                        check-strictly
                         :data="gropus"
                         node-key="id"
                         :props="treeProps" />

@@ -25,19 +25,27 @@ type Menu = BaseEntity & {
 };
 
 // 部门
-type Dept = BaseEntity & {
+type Organization = BaseEntity & {
+    // 上级ID
+    pid: string;
     // 名称
     name: string;
-    // 类型
-    type: string;
     // 代码
     code: string;
-    // 排序
-    sort: number;
+    // 类型
+    type: number;
+    // 地址
+    address: string;
+    // 负责人ID
+    manager_id: string;
     // 备注
     remark?: string;
+};
+
+// 组织机构树形
+type OrganizationTree = Organization & {
     // 子级
-    children?: Dept[];
+    children?: OrganizationTree[];
 };
 
 // 字典组

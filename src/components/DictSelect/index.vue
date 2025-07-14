@@ -5,8 +5,9 @@ import UseDictStore from "@/plugin/store/modules/useDictStore";
 
 const props = defineProps({
     modelValue: {
-        type: [String, Number] as PropType<string | number>,
-        required: true
+        type: [String, Number] as PropType<string | number | undefined>,
+        required: false,
+        default: undefined
     },
     placeholder: {
         type: String as PropType<string>,
@@ -26,7 +27,7 @@ const options = ref<DictData[]>([]);
 
 const localValue = computed({
     get() {
-        return String(props.modelValue) || "";
+        return props.modelValue === undefined ? "" : String(props.modelValue);
     },
     set(val) {
         const parsedVal = Number.isNaN(Number(val)) ? val : Number(val);

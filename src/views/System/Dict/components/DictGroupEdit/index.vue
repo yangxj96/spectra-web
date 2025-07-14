@@ -34,11 +34,11 @@ const edit = reactive({
     rules: {
         name: [
             { required: true, message: "请输入字典名称", trigger: "blur" },
-            { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" }
+            { min: 2, max: 30, message: "长度在 2 到 30 个字符", trigger: "blur" }
         ],
         code: [
             { required: true, message: "请输入字典编码", trigger: "blur" },
-            { min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur" }
+            { min: 2, max: 30, message: "长度在 2 到 30 个字符", trigger: "blur" }
         ],
         state: [{ required: true, message: "请选择字典状态", trigger: "blur" }]
     },
@@ -74,7 +74,7 @@ function handleSaveDictGroup() {
             return;
         }
         dialog.value.loading = true;
-        let request = has_edit ? DictApi.createGroup : DictApi.modifyGroup;
+        let request = has_edit ? DictApi.modifyGroup : DictApi.createGroup;
         request(edit.form)
             .finally(() => {
                 dialog.value.loading = false;
@@ -112,6 +112,7 @@ function handleSaveDictGroup() {
                     <el-tree-select
                         v-model="edit.form.pid"
                         clearable
+                        check-strictly
                         default-expand-all
                         :data="gropus"
                         node-key="id"
