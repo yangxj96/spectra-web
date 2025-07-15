@@ -166,6 +166,7 @@ function handleTableSortChange(data: { column: User; prop: string; order: string
                     <dict-tag v-model="scope.row.state" primary_value="0" dict_code="sys_user_state" />
                 </template>
             </el-table-column>
+            <el-table-column align="center" label="所属组织" prop="organization_name" />
             <el-table-column align="center" label="角色" prop="roles">
                 <template #default="scope">
                     <el-tag v-for="(item, idx) in scope.row.roles" :index="idx" style="margin-right: 4px">
@@ -234,6 +235,12 @@ function handleTableSortChange(data: { column: User; prop: string; order: string
                     <el-select v-model="edit.form.role_ids" value-key="id" multiple placeholder="请选择角色" clearable>
                         <el-option v-for="item in edit.roles" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
+                </el-form-item>
+                <el-form-item label="所属组织" prop="role_ids">
+                    <dict-select
+                        v-model="edit.form.organization_id"
+                        dict_code="sys_organization_type"
+                        placeholder="请选择组织机构" />
                 </el-form-item>
             </el-form>
         </template>

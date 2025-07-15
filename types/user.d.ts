@@ -23,4 +23,6 @@ type User = BaseEntity & {
     roles: Role[];
     // 角色ID列表
     role_ids: string[];
+    // 组织机构ID
+    organization_id: string;
 };

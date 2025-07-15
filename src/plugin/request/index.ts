@@ -86,8 +86,12 @@ const responseRejected = (error: AxiosError) => {
         let result = error.response?.data as IResult;
         switch (error.response?.status) {
             case 401: {
-                ElMessage.error(result.msg);
-                GlobalUtils.exit();
+                ElMessage.error({
+                    message: result.msg,
+                    onClose: () => {
+                        GlobalUtils.exit();
+                    }
+                });
                 return;
             }
             case 402: {
