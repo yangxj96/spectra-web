@@ -5,10 +5,6 @@ import PQueue from "p-queue";
 // 创建一个串行队列（concurrency=1）
 const serialQueue = new PQueue({ concurrency: 1 });
 
-interface StoreDict {
-    dicts: Record<string, DictData[]>;
-}
-
 const useDictStore = defineStore("dict", {
     state: (): StoreDict => ({
         dicts: {}
@@ -34,8 +30,7 @@ const useDictStore = defineStore("dict", {
                 }
             });
         }
-    },
-    persist: true
+    }
 });
 
 export default useDictStore;

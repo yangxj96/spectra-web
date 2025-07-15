@@ -2,16 +2,10 @@
 import AuthApi from "@/api/AuthApi.ts";
 import GlobalUtils from "@/utils/GlobalUtils";
 import { ElMessage } from "element-plus/es";
-import useStore from "@/plugin/store";
 import { stopAllRequest } from "@/plugin/request";
 import logo from "@/assets/images/logo.svg";
 import avatar from "@/assets/images/avatar.png";
-
-const router = useRouter();
-
-function gotoHome() {
-    router.push({ path: "/" });
-}
+import usePropsStore from "@/plugin/store/modules/usePropsStore.ts";
 
 function handleUserLogout() {
     stopAllRequest();
@@ -26,11 +20,11 @@ function handleUserLogout() {
 }
 
 function handleModifyPasswordPopup() {
-    useStore().props.change_password = true;
+    usePropsStore().change_password = true;
 }
 
 function handlePersonalPopup() {
-    useStore().props.personal_details = true;
+    usePropsStore().personal_details = true;
 }
 </script>
 

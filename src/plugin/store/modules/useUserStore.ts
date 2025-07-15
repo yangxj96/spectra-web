@@ -1,14 +1,10 @@
 import { defineStore } from "pinia";
 
-export interface UserState {
-    token: Token;
-}
-
 const useUserStore = defineStore("user", {
-    state: () => {
+    state: (): StoreUser => {
         return {
-            token: {}
-        } as UserState;
+            token: {} as Token
+        };
     },
     persist: true
 });

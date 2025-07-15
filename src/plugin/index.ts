@@ -1,6 +1,6 @@
 import type { App } from "vue";
 // 状态
-import { createStore } from "@/plugin/store";
+import createStore from "@/plugin/store";
 // 路由
 import router from "@/plugin/router";
 // element自定义的样式文件
