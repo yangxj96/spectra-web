@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 
 const useTabsStore = defineStore("tabs", {
-    state: () => ({
+    state: (): StoreTabs => ({
         tabs: [],
-        active: undefined as string | undefined
+        active: undefined
     })
 });
 export default useTabsStore;

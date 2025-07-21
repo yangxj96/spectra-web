@@ -55,8 +55,7 @@ function onMenuItemClick() {
 }
 
 .box-menu:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
+    width: 100%;
 }
 
 .icon-sidebar {

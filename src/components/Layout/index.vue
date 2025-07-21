@@ -12,6 +12,9 @@ const breadcrumb = ref<RouteLocationMatched[]>([]);
 const { toggle } = useFullscreen(context);
 const theme = ref(useDark());
 
+// tabs
+const active = ref("home");
+
 onMounted(() => {
     handlerRouter();
 
@@ -28,8 +31,8 @@ onMounted(() => {
 });
 
 // 深色模式切换
-function handleDarkSwitch(val: boolean) {
-    theme.value = val;
+function handleDarkSwitch(val: unknown) {
+    theme.value = val as boolean;
     useToggle(theme);
 }
 
@@ -52,7 +55,7 @@ function handleMenu() {
         </el-header>
 
         <el-container class="box-container">
-            <el-aside width="200px">
+            <el-aside width="10vw">
                 <sidebar />
             </el-aside>
 
@@ -71,8 +74,10 @@ function handleMenu() {
                             </el-breadcrumb-item>
                         </el-breadcrumb>
                     </el-col>
+                    <!-- 右边工具条 -->
                     <el-col :span="3">
                         <el-form inline style="float: right">
+                            <!-- 深色浅色模式切换 -->
                             <el-form-item class="form-item">
                                 <el-switch
                                     v-model="theme"
@@ -89,6 +94,7 @@ function handleMenu() {
                                     </template>
                                 </el-switch>
                             </el-form-item>
+                            <!-- 全屏切换 -->
                             <el-form-item class="form-item form-item-end">
                                 <icons
                                     name="icon-fullScreen"
@@ -99,9 +105,20 @@ function handleMenu() {
                         </el-form>
                     </el-col>
                 </el-row>
+                <!-- tabs布局 -->
+                <div class="box-tabs">
+                    <ul class="box-tabs-ul">
+                        <li class="box-tabs-item active">首页</li>
+                        <li class="box-tabs-item">占位1</li>
+                        <li class="box-tabs-item">占位2</li>
+                        <li class="box-tabs-item">占位3</li>
+                    </ul>
+                </div>
+                <!-- 内容部分 -->
                 <div ref="content" class="box-content loading-box">
                     <router-view></router-view>
                 </div>
+                <!-- 底部版权 -->
                 <el-footer class="footer">
                     Copyright © 2018-2023
                     <strong><a href="//yangxj96.com/" target="_blank">yangxj96</a></strong>
@@ -116,10 +133,6 @@ function handleMenu() {
 </template>
 
 <style scoped lang="scss">
-::v-deep(.el-aside) {
-    width: auto;
-}
-
 .box {
     height: 100vh;
 }
@@ -157,10 +170,63 @@ function handleMenu() {
         }
     }
 
+    .box-tabs {
+        height: 3vh;
+        padding: 0 10px;
+
+        .box-tabs-ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .box-tabs-item.active {
+            color: white;
+            background-color: var(--el-color-primary);
+            border-color: var(--el-border-color);
+        }
+
+        .box-tabs-item {
+            font-size: 0.5em;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid var(--el-border-color);
+            padding: 2px 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .box-tabs-item.active::before {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--el-color-primary);
+        }
+
+        .box-tabs-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .box-tabs-item.active:hover {
+            background-color: var(--el-color-primary);
+        }
+    }
+
     .box-content {
         width: 100%;
         // 面包屑3.6vh,有个地方计算错了,改成5vh,头高62px,底部版权20px
-        height: calc(100vh - 5vh - 62px - 20px);
+        // 5vh - 面包屑
+        // 62px - 头部固定高度
+        // 20px - 底部版权固定高度
+        // 3vh - tabs固定高度
+        height: calc(100vh - 5vh - 62px - 20px - 3vh);
         overflow: auto;
     }
 

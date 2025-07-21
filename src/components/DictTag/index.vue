@@ -65,11 +65,8 @@ const display_label = computed(() => {
 // 计算tagType
 const tag_type = computed(() => {
     if (!props.primary_value) {
-        console.log(`没有设置主类型值`);
         return "primary";
     }
-    console.log(`主类型值:`, props.primary_value);
-    console.log(`dict_data:`, dict_data);
     if (dict_data.value) {
         return dict_data.value.value === String(props.primary_value) ? "primary" : "danger";
     }
