@@ -12,9 +12,6 @@ const breadcrumb = ref<RouteLocationMatched[]>([]);
 const { toggle } = useFullscreen(context);
 const theme = ref(useDark());
 
-// tabs
-const active = ref("home");
-
 onMounted(() => {
     handlerRouter();
 
